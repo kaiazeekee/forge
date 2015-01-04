@@ -1,0 +1,14 @@
+{
+    "name": "foonster/forge",
+    "description": "Various stand-alone classes used by Foonter Technology",
+    "keywords": ["anvil", "html", "email"],
+    "type": "library",
+    "homepage": "http://www.foonster.com",
+    "license": "BSD Style",
+    "authors": [
+        {
+            "name": "foonster/Foonster Contributors",
+            "homepage": "https://github.com/foonster/Foonster/graphs/contributors"
+        }
+    ]
+}
