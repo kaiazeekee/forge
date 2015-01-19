@@ -100,11 +100,12 @@ class Anvil
 
 
     /**
-     * [array_to_columns description]
-     * @param  [array]  $aArray     [description]
-     * @param  integer $nCols      [number of columns to return]
-     * @param  string  $cDirection [description]
-     * @return [array]              [description]
+     * [array_to_columns] - convert an array to various arrays so the 
+     *                      values are in columns
+     * @param  [array]  $aArray     [oringal array to sort]
+     * @param  integer  $nCols      [number of columns to return]
+     * @param  string   $cDirection [vertical sorting vs horizontal sorting]
+     * @return [array]              [final array with values in new order.]
      */
     public function arrayToColumns ($aArray, $nCols = 2, $cDirection = 'vertical')
     {
@@ -147,14 +148,13 @@ class Anvil
     } 
     
     /**
-     * [attributeExists description]
-     * @param  [type] $cAttribute [description]
-     * @return [type]             [description]
+     * [attributeExists]
+     * @param  string $cAttribute [description]
+     * @return boolean [Returns TRUE on success or FALSE on failure.]
      */
     public static function attributeExists($cAttribute)
     {
         $oObject = get_object_vars($this);
-
         return array_key_exists($attribute, $object_vars);
     }
 
@@ -239,7 +239,7 @@ class Anvil
      * @param  [type] $cTable [description]
      * @return [type]         [description]
      */
-    public function categoryTree( $cTable, $qualifier = '' )
+    public function categoryTree($cTable, $qualifier = '')
     {
         $aCategories = array();
 
@@ -326,11 +326,11 @@ class Anvil
 
     /**
      * [connectToDatabase description]
-     * @param  string $database   [description]
-     * @param  string $user       [description]
-     * @param  string $password   [description]
-     * @param  string $connection [description]
-     * @return [type]             [description]
+     * @param  string $database   [the database to connect to]
+     * @param  string $user       [user associated with connection]
+     * @param  string $password   [password associated with connection]
+     * @param  string $connection [connection host]
+     * @return none
      */
     public function connectToDatabase($database = '', $user = '', $password = '', $connection = 'localhost')
     {
@@ -347,10 +347,9 @@ class Anvil
     }
 
     /**
-     *  connectToDatabase : controls the overall connection to the database used
-     *  by this clas..
-     *  
-     * 
+     * [changeDatabase description]
+     * @param  [type] $dbh [description]
+     * @return [type]      [description]
      */
     public function changeDatabase($dbh)
     {
@@ -358,11 +357,11 @@ class Anvil
     }
 
     /**
-    *
-    *
-    *
-    */
-   
+     * [formatDate description]
+     * @param  [type] $date [description]
+     * @param  string $type [description]
+     * @return [type]       [description]
+     */
     public function formatDate($date, $type = 'mdY')
     {
         
@@ -437,11 +436,12 @@ class Anvil
     }
 
     /**
-    *
-    *
-    *
-    */
-
+     * [dateDiff]
+     * @param  string  $nStart [description]
+     * @param  string  $nEnd   [description]
+     * @param  string  $sel    [description]
+     * @return integer         [description]
+     */
     public static function dateDiff($nStart, $nEnd, $sel = 'Y')
     {
 
@@ -552,7 +552,7 @@ class Anvil
 
     /**
      * [isJSON] - determine if string is a JSON string
-     * @param  [string]  $string [string to be tested]
+     * @param  string  $string [string to be tested]
      * @return boolean   true = yes / false = no
      */
     public function isJSON($string)
@@ -590,8 +590,8 @@ class Anvil
 
     /**
      * [dumpVariable] - dump variable to HTML
-     * @param  [string] $var [the variable to be dumped to the screen in HTML]
-     * @return [string]      [the returned screen.]
+     * @param  [various] $var [the variable to be dumped to the screen in HTML]
+     * @return string      [the returned screen.]
      */
     public static function dumpVariable($var)
     {
@@ -603,9 +603,9 @@ class Anvil
 
     /**
      * [encodeValue] - simple encoding method
-     * @param  [string] $string [string to encode]
-     * @param  [string] $key    [key for encoding]
-     * @return [string]         [returned string]
+     * @param  string $string [string to encode]
+     * @param  string $key    [key for encoding]
+     * @return string         [returned string]
      */
     public static function encodeValue($string, $key)
     {
@@ -621,8 +621,8 @@ class Anvil
 
     /**
      * [encodeXMLString]
-     * @param  [string] $string [valid XML string to be encoded]
-     * @return [string]         [HTML encoded string]
+     * @param  string $string [valid XML string to be encoded]
+     * @return string         [HTML encoded string]
      */
     public static function encodeXMLString(&$string)
     {
@@ -668,8 +668,8 @@ class Anvil
     
     /**
      * [extractDomainName]
-     * @param  [string] $cString [a string containing a domain name]
-     * @return [string]          [the domain name found]
+     * @param  string $cString [a string containing a domain name]
+     * @return string          [the domain name found]
      */
     public static function extractDomainName($cString)
     {
@@ -679,9 +679,9 @@ class Anvil
 
     /**
      * [formatPhoneNumber] - take raw string and format according to appropriate country code
-     * @param  [string] $cString [string containing number]
-     * @param  [string] $cType   [country to use as template]
-     * @return [string]          [final string]
+     * @param  string $cString [string containing number]
+     * @param  string $cType   [country to use as template]
+     * @return string          [final string]
      */
     public static function formatPhoneNumber($cString, $cType = 'US')
     {
@@ -702,7 +702,7 @@ class Anvil
      *  This function does not suffer the rounding issue found in other solutions when 
      *  you start hitting the 70+ range.
      * 
-     * @param  [string] $cDOB [string representing birthday]
+     * @param  string $cDOB [string representing birthday]
      * @return [integer]      [number of years between the two dates.]
      */
     public static function getAge($cDOB)
@@ -733,8 +733,8 @@ class Anvil
 
     /**
      * [getFileExtension] - extract the file extension from a path name.
-     * @param  [string] $name [The path name to be evaluated]
-     * @return [string]       [The file extension]
+     * @param  string $name [The path name to be evaluated]
+     * @return string       [The file extension]
      */
     public function getFileExtension($name)
     {
@@ -748,7 +748,7 @@ class Anvil
 
     /**
      * [getIpAddress] - get the IP address of incoming traffic
-     * @return [string] [The IP Address]
+     * @return string [The IP Address]
      */
     public static function getIpAddress()
     {
@@ -874,12 +874,16 @@ class Anvil
 
     /**
      * [isStringHard - determine if string is hardend to requested level.]
-     * @param  [string]  $cString  [the string to be tested]
-     * @param  integer $nLen     [the minimum length required for the string]
-     * @param  boolean $lSpecial [require special characters.]
+     * @param  string  $cString       [string to be tested]
+     * @param  integer $nLen          [the minimum length required for the string]
+     * @param  boolean $lUpperCase    [require at least one uppercase character.]
+     * @param  boolean $lSpecial      [require at least one special character.]
+     * @param  boolean $nSpecialCnt   [the number greater than one, special characters required.]
+     *
+     * 
      * @return boolean           [true/false if tests fail.]
      */
-    public function isStringHard ($cString, $nLen = 8, $lSpecial = true)
+    public function isStringHard ($cString, $nLen = 8, $lUpperCase = false, $lSpecial = true, $nSpecialCnt = 1)
     {
         if (strlen($cString) >= $nLen) {
             if (preg_match('/[A-Z]/', $cString)) {
@@ -912,6 +916,7 @@ class Anvil
    * [isValidEmailAddress - test for valid email address provided.]
    * @param  string  $email     [string to be validated]
    * @param  boolean $lDNSCheck [if true, perform DNS check to ensure domain is valid.]
+   * 
    * @return boolean           [true/false if tests fail.]
    */
     public function isValidEmailAddress($email, $lDNSCheck = false)
@@ -996,9 +1001,9 @@ class Anvil
     /**
      * [lpad] - pad the left side of a string with a character.
      * @param  [integer] $length  [the total length of the string]
-     * @param  [string] $string   [the string to pad]
+     * @param  string $string   [the string to pad]
      * @param  string $character  [the character to pad with]
-     * @return [string]           [the returned string]
+     * @return string           [the returned string]
      */
     public static function lpad($length, $string, $character = ' ')
     {
@@ -1011,8 +1016,8 @@ class Anvil
 
     /**
      * [lwcase] - convert a string to lower-case letters
-     * @param  [string] $cString [the string to convert]
-     * @return [string]          [the converted string]
+     * @param  string $cString [the string to convert]
+     * @return string          [the converted string]
      */
     public static function lwcase($cString)
     {

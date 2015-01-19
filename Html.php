@@ -378,8 +378,8 @@ class Html
     }
 
     /**
-     * [setTag description]
-     * @param [type] $name [description]
+     * [setTag] - set the tag value
+     * @param none
      */
     public function setTag($name)
     {
