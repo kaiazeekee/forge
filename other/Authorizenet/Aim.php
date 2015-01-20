@@ -114,7 +114,7 @@ class Aim
      */
     public static function gateway()
     {
-        return $this->gateway;
+        return self::gateway;
     }
 
     /**
