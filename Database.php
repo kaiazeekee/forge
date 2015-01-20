@@ -56,13 +56,16 @@ class Database
 {
     private $dbh;
     private $database = '';
+    private $host = 'localhost';
+    private $type = 'mysql';
     private $dbUser = '';
     private $dbPass = '';
-    private $dsn = 'mysql:host=localhost';
+    private $dsn = '';
     private $lastCommandError = false;
     private $connectionError = false;
     private $errorMessage = false;
     private $databases = array();
+    private $vars;
 
     /**
      * [__construct]
@@ -73,13 +76,15 @@ class Database
      *                           [The Data Source Name, or DSN, contains the information required to connect to
      *                           the database. ]
      */
-    public function __construct($database = null, $user = null , $pass = null, $dsn = null)
+    public function __construct($database = null, $user = null , $pass = null, $dsn = null, $host = null, $type = null)
     {
         if (!empty($database)) {
             $this->database = $database;
             !empty($user) ? $this->dbUser = $user : false;
             !empty($pass) ? $this->dbPass = $pass : false;
             !empty($dsn) ? $this->dsn = $dsn : false;
+            !empty($host) ? $this->host = $host : false;
+            !empty($type) ? $this->type = $type : false;
             $this->connect();
         }
     }
@@ -196,8 +201,17 @@ class Database
      */
     public function connect()
     {
+
+        $dsn;
+
+        if ($this->type == 'mysql') {
+            $dsn = $this->type . ':';            
+            strlen($this->database) > 0 ? $dsn .= 'dbname=' . $this->database . ';' : false;             
+            $dsn .= 'host=' . $this->host;            
+        }
+
         try {
-            $this->dbh = new \PDO($this->dsn, 
+            $this->dbh = new \PDO($dsn, 
                 $this->dbUser, 
                 $this->dbPass);  
             $this->dbh->setAttribute( \PDO::MYSQL_ATTR_FOUND_ROWS, true);   
@@ -205,10 +219,10 @@ class Database
             $this->dbh->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
         } catch (\PDOException $e) {
             $this->connectionError = true;
-            $this->errorMessage = "Error!: " . $e->getMessage() . "<br/>";
+            $this->errorMessage = "PDO Exception!: " . $e->getMessage() . "<br/>";
         } catch (\Exception $e) {
             $this->connectionError = true;
-            $this->errorMessage = "Error!: " . $e->getMessage() . "<br/>";
+            $this->errorMessage = "Exception!: " . $e->getMessage() . "<br/>";
         }
     }
 
@@ -237,13 +251,53 @@ class Database
             'password' => $this->dbPass
             ));
     }
+    
+    /**
+     * [db_split_sql]
+     * 
+     * @param  [type] $sql [description]
+     * @return [type]      [description]
+     * 
+     */
+    private function db_split_sql($sql) {
+        $sql = trim($sql);
+        $sql = preg_replace("/\n#[^\n]*\n/", "\n", $sql);
+        $buffer = array();
+        $ret = array();
+        $in_string = false;
+
+        for($i=0; $i<strlen($sql)-1; $i++) {
+            if($sql[$i] == ";" && !$in_string) {
+                $ret[] = substr($sql, 0, $i);
+                $sql = substr($sql, $i + 1);
+                $i = 0;
+            }
+
+            if($in_string && ($sql[$i] == $in_string) && $buffer[1] != "\\") {
+                $in_string = false;
+            } elseif(!$in_string && ($sql[$i] == '"' || $sql[$i] == "'") && (!isset($buffer[0]) || $buffer[0] != "\\")) {
+                $in_string = $sql[$i];
+            }
+            if(isset($buffer[1])) {
+                $buffer[0] = $buffer[1];
+            }
+            $buffer[1] = $sql[$i];
+        }
+
+        if(!empty($sql)) {
+            $ret[] = $sql;
+        }
+        return($ret);
+    }
 
     /**
+     * 
      * [describeTable]
      * 
      * @param  string $table [what table obtain information about.]
      * 
      * @return array         [array attributes]
+     * 
      */
     public function describeTable($table)
     {
@@ -259,9 +313,11 @@ class Database
     }
 
     /**
+     * 
      * [errorInfo description]
      * 
      * @return [type] [description]
+     * 
      */
     public function errorInfo()
     {
@@ -269,9 +325,11 @@ class Database
     }
 
     /**
+     * 
      * [errorMessage]
      * 
      * @return string 
+     * 
      */
     public function errorMessage()
     {
@@ -279,9 +337,11 @@ class Database
     }
 
     /**
+     * 
      * [lastInsertId]
      * 
      * @return integer number id from the last insert command with auto-increment.
+     * 
      */
     public function lastInsertId()
     {
@@ -289,9 +349,11 @@ class Database
     }
 
     /**
+     * 
      * [isError]
      * 
      * @return boolean 
+     * 
      */
     public function isError()
     {
@@ -299,16 +361,57 @@ class Database
     }
 
     /**
-     * [setDsn] - se the DSN variable.
+     * [runQuery]
      * 
-     * @param string $dsn [The Data Source Name, or DSN, contains the information required 
-     *                    to connect to the database. ]
+     * @param  string $sql    [the query to run]
+     * @param  array  $params [the parameters to bind to the query string.]
+     * @return mixed
+     * 
      */
-    public function setDsn($dsn)
+    public function runQuery($sql, $params = array())
     {
-        $this->dsn = $dsn;
-        return $this;
+        try {
+            $sth = $this->dbh->prepare($sql);
+            if (!$sth) {
+                echo "\nPDO::errorInfo():\n";
+                print_r($this->dbh->errorInfo());
+            }
+            $sth->execute($params);
+
+            if ($sth->rowCount() == 1) {
+                return $sth->fetch(\PDO::FETCH_OBJ);
+            } else {
+                return $sth;
+            }
+        } catch ( \PDOException $e) {
+            return $e->getCode() . ':' . $e->getMessage();
+        } catch ( \Exception $e ) {
+            return $e->getCode() . ':' . $e->getMessage();
+        }
+    }    
+
+    /**
+     * [runSourceCommand]
+     * 
+     * @param  string $sqlfile [path to .sql file]
+     * 
+     * @return none
+     * 
+     */
+    public function runSourceCommand($sqlfile) {
+        $mqr = @get_magic_quotes_runtime();
+        @set_magic_quotes_runtime(0);
+        $query = fread(fopen( $sqlfile, 'r' ), filesize( $sqlfile ) );
+        @set_magic_quotes_runtime($mqr);
+        $pieces  = $this->db_split_sql($query);
+        for ($i=0; $i<count($pieces); $i++) {
+            $pieces[$i] = trim($pieces[$i]);
+            if(!empty($pieces[$i]) && $pieces[$i] != "#") {
+                $this->dbh->exec($pieces[$i]);
+            }
+        }
     }
+
     
     /**
      * [setCredentials] - set the user/pw combonation to be used by the 
@@ -336,6 +439,40 @@ class Database
         $this->database = $database;
         return $this;
     }
+
+    /**
+     * [setVariables]
+     * 
+     * @param [type] $sql    [description]
+     * @param array  $params [description]
+     * 
+     */
+    public function setVariables($sql, $params = array())
+    {
+        $vars = array();        
+        $sql = str_replace(',', ', ', $sql);
+        preg_match_all("/:(.*?)\s/", $sql, $matches);
+
+        foreach ($matches[1] as $value) {
+            $value = str_replace(',', '', $value);
+            array_key_exists($value, $params) ? $vars[$value] = $params[$value] : false;
+        }
+        $this->vars = $vars;
+        return $this;
+    }        
+
+    /**
+     * [setHost] - set the Host variable.
+     * 
+     * @param string $dsn [The Data Source Name, or DSN, contains the information required 
+     *                    to connect to the database. ]
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+        return $this;
+    }
+
 
     /**
      * [showDatabases] - return a list of databases the current user is able to 
@@ -374,4 +511,5 @@ class Database
         return $array;
     }
 
+   
 }
