@@ -772,56 +772,6 @@ class Anvil
     }
 
     /**
-     * [googleLonLat] Use GoogleMaps API to determine Lon/Lat - this may require a license
-     *                depending on how you are using the application.
-     *                
-     * @param  string $address [Address Line 1]
-     * @param  string $city    [City]
-     * @param  string $state   [State]
-     * @param  string $zip     [Zip Code]
-     * @param  string $country [Country]
-     * @return [object]        [Lon & Lat Variables]
-     */
-    public function googleLonLat($address = '', $city = '', $state = '', $zip = '', $country = 'US')
-    {
-
-        $return = array('lon' => '', 'lat' => '');
-        $input = array();
-        !empty($address) ? $input[] = urlencode($address) : false;
-        !empty($city) ? $input[] = urlencode($city) : false;
-        !empty($state) ? $input[] = urlencode($state) : false;
-        !empty($zip) ? $input[] = urlencode($zip) : false;
-        !empty($country) ? $input[] = urlencode($country) : false;
-        $map = $this->slurp('http://maps.googleapis.com/maps/api/geocode/json?address=' . implode(',+', $input) . '&sensor=true');
-
-        echo 'http://maps.googleapis.com/maps/api/geocode/json?address=' . implode(',+', $input) . '&sensor=true';
-
-        $array = json_decode($map, true);
-        if ($array['status'] != 'ZERO_RESULTS') {
-            $return['lat'] = $array['results'][0]['geometry']['location']['lat'];
-            $return['lon'] = $array['results'][0]['geometry']['location']['lng'];
-        }
-        return (object) $return;
-    }
-
-    /**
-     * [googleLonLat] Use GoogleMaps API to determine Lon/Lat - this may require a license
-     *                depending on how you are using the application.
-     *                
-     * @param  string $address [Address]
-     * @return [object]        [full map information]
-     */
-    public function googleMapInfo($address = '')
-    {
-
-        $map = $this->slurp('http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode($address) . '&sensor=true');
-
-        $array = json_decode($map, true);
-    
-        return (object) $array;
-    }    
-
-    /**
      * [getTimeStamp description]
      * @param  string $cFormat [description]
      * @return [type]          [description]
