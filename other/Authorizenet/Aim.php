@@ -112,9 +112,9 @@ class Aim
      * 
      * @return string [contents of private gateway variable]
      */
-    public static function gateway()
+    public function gateway()
     {
-        return self::gateway;
+        return $this->gateway;
     }
 
     /**
