@@ -117,7 +117,7 @@ class Database
         $sql = '';
         $fields = $values = $updates = $columns = array();
         $type = strtoupper(trim($type));
-        $sth = $this->_dbh->prepare('DESCRIBE ' . $table);
+        $sth = $this->dbh->prepare('DESCRIBE ' . $table);
 
         $sth->execute();
 
