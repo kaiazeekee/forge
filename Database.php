@@ -82,7 +82,7 @@ class Database
             $this->database = $database;
             !empty($user) ? $this->dbUser = $user : false;
             !empty($pass) ? $this->dbPass = $pass : false;
-            !empty($dsn) ? $this->dsn = $dsn : false;
+            !empty($dsn)  ? $this->dsn = $dsn : false;
             !empty($host) ? $this->host = $host : false;
             !empty($type) ? $this->type = $type : false;
             $this->connect();
@@ -338,18 +338,6 @@ class Database
 
     /**
      * 
-     * [lastInsertId]
-     * 
-     * @return integer number id from the last insert command with auto-increment.
-     * 
-     */
-    public function lastInsertId()
-    {
-        return $this->dbh->lastInsertId();
-    }
-
-    /**
-     * 
      * [isError]
      * 
      * @return boolean 
@@ -358,6 +346,18 @@ class Database
     public function isError()
     {
         return $this->error;
+    }    
+
+    /**
+     * 
+     * [lastInsertId]
+     * 
+     * @return integer number id from the last insert command with auto-increment.
+     * 
+     */
+    public function lastInsertId()
+    {
+        return $this->dbh->lastInsertId();
     }
 
     /**
@@ -370,19 +370,22 @@ class Database
      */
     public function runQuery($sql, $params = array())
     {
+        // ensure that only 
+        $matches = array();
+        foreach ($params as $key => $value) {
+            if (preg_match("/\:$key/", $sql)) {
+                $matches[$key] = $value;
+            }
+        }
+
         try {
             $sth = $this->dbh->prepare($sql);
             if (!$sth) {
                 echo "\nPDO::errorInfo():\n";
                 print_r($this->dbh->errorInfo());
             }
-            $sth->execute($params);
-
-            if ($sth->rowCount() == 1) {
-                return $sth->fetch(\PDO::FETCH_OBJ);
-            } else {
-                return $sth;
-            }
+            $sth->execute($matches);
+            return $sth;            
         } catch ( \PDOException $e) {
             return $e->getCode() . ':' . $e->getMessage();
         } catch ( \Exception $e ) {
@@ -441,6 +444,18 @@ class Database
     }
 
     /**
+     * [setHost] - set the Host variable.
+     * 
+     * @param string $dsn [The Data Source Name, or DSN, contains the information required 
+     *                    to connect to the database. ]
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+        return $this;
+    }    
+
+    /**
      * [setVariables]
      * 
      * @param [type] $sql    [description]
@@ -460,19 +475,6 @@ class Database
         $this->vars = $vars;
         return $this;
     }        
-
-    /**
-     * [setHost] - set the Host variable.
-     * 
-     * @param string $dsn [The Data Source Name, or DSN, contains the information required 
-     *                    to connect to the database. ]
-     */
-    public function setHost($host)
-    {
-        $this->host = $host;
-        return $this;
-    }
-
 
     /**
      * [showDatabases] - return a list of databases the current user is able to 
