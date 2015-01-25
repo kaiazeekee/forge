@@ -1,91 +1,144 @@
 <?php
-/******************************************************************************\
-+------------------------------------------------------------------------------+
-| Foonster Publishing Software                                                 |
-| Copyright (c) 2002 Foonster Technology                                       |
-| All rights reserved.                                                         |
-+------------------------------------------------------------------------------+
-|                                                                              |
-| OWNERSHIP. The Software and all modifications or enhancements to, or         |
-| derivative works based on the Software, whether created by Foonster          |
-| Technology or you, and all copyrights, patents, trade secrets, trademarks    |
-| and other intellectual property rights protecting or pertaining to any       |
-| aspect of the Software or any such modification, enhancement or derivative   |
-| work are and shall remain the sole and exclusive property of Foonster        |
-| Technology.                                                                  |
-|                                                                              |
-| LIMITED RIGHTS. Pursuant to this Agreement, you may: (a) use the Software    |
-| on one website only, for purposes of running one website only. You must      |
-| provide Foonster Technology with exact URL (Unique Resource Locator) of the  |
-| website you install the Software to; (b) modify the Software and/or merge    |
-| it into another program; c) transfer the Software and license to another     |
-| party if the other party agrees to accept the terms and conditions of this   |
-| Agreement.                                                                   |
-|                                                                              |
-| Except as expressly set forth in this Agreement, you have no right to use,   |
-| make, sublicense, modify, transfer or copy either the original or any copies |
-| of the Software or to permit anyone else to do so. You may not allow any     |
-| third party to use or have access to the Software. It is illegal to copy the |
-| Software and install that single program for simultaneous use on multiple    |
-| machines.                                                                    |
-|                                                                              |
-| PROPRIETARY NOTICES. You may not remove, disable, modify, or tamper with     |
-| any copyright, trademark or other proprietary notices and legends contained  |
-| within the code of the Software.                                             |
-|                                                                              |
-| COPIES.  "CUSTOMER" will be entitled to make a reasonable number of          |
-| machine-readable copies of the Software for backup or archival purposes.     |
-|                                                                              |
-| LICENSE RESTRICTIONS. "CUSTOMER" agrees that you will not itself, or through |
-| any parent, subsidiary, affiliate, agent or other third party:               |
-|(a) sell, lease, license or sub-license the Software or the Documentation;    |
-|(b) decompile, disassemble, or reverse engineer the Software, the Database,   |
-| in whole or in part; (c) write or develop any derivative software or any     |
-| other software program based upon the Software or any Confidential           |
-| Information, | except pursuant to authorized Use of Software, if any; (d) use|
-| the Software to provide services on a 'service bureau' basis; or (e) provide,|
-| disclose, | divulge or make available to, or permit use of the Software by   |
-| any unauthorized third party without Foonster Technology's prior written     |
-| consent.                                                                     |
-|                                                                              |
-+------------------------------------------------------------------------------+
-\******************************************************************************/
-
 namespace foonster\forge;
 
+/**
+ * A class that may be used to compose and send e-mail messages using 
+ * the sendmail function within PHP/Server
+ * 
+ * 
+ * @author  Nicolas Colbert
+ * @copyright (c) 2002 Foonster Technology                                     
+ *                                                                    
+ */
 class Email
 {
 
+    /**
+     * Indentifying text for module sending email.
+     * 
+     * @access private
+     * @var string
+     */
     private $_mailer = 'FOONSTER TECHNOLOGY EMAIL MODULE 6.5.3';
+
     private $vars = array();
-    private $_to; // to field
-    private $_from; // from field
-    private $_fromname; // comman name associated with email address
-    private $_sender; // sender field if set - also could be added in _headers
-    private $_cc = array(); // array of cc email addresses
+    /**
+     * value used in the TO field.
+     * 
+     * @access private
+     * @var string
+     */
+    private $_to;
+    /**
+     * value used in the FROM field.
+     * 
+     * @access private
+     * @var string
+     */
+    private $_from;
+    /**
+     * The common name associated with the email address.
+     * 
+     * @access private
+     * @var string
+     */
+    private $_fromname; 
+    /**
+     * sender field value, also can be added in _headers.
+     * 
+     * @access private
+     * @var string
+     */
+    private $_sender;
+    /**
+     * array of email addresses to be used in CC field
+     * 
+     * @access private
+     * @var array
+     */
+    private $_cc = array();
+    /**
+     * array of email addresses to be used in BCC field
+     * 
+     * @access private
+     * @var array
+     */
     private $_bcc = array(); // blind cc field.
-    private $_attachments = array(); // number of attachments
+    /**
+     * array of files to be added in file attachment function.
+     * 
+     * @access private
+     * @var array
+     */    
+    private $_attachments = array();
+    /**
+     * priority level assigned to email 1 to 10
+     * 
+     * @access private
+     * @var integer
+     */
     private $_priority = 3; // priority level
-    private $_headers; // array of headers associated with email
+    /**
+     * array of values to be used in the headers section of the email.
+     * 
+     * @access private
+     * @var array
+     */
+    private $_headers;
+    /**
+     * @access private
+     * @var boolean
+     */
     private $_lCheckDns = false; // DNS widget
+    /**
+     * @access private
+     * @var string
+     */
     private $_html_msg; // html version of email
+    /**
+     * @access private
+     * @var string
+     */
     private $_text_msg; // plain-text version of email
+    /**
+     * @access private
+     * @var string
+     */
     private $_html_content_transfer_encoding = '7bit';
+    /**
+     * @access private
+     * @var string
+     */
     private $_html_charset = 'utf-8'; // UTF-8 - iso-8859-1
+    /**
+     * @access private
+     * @var string
+     */
     private $_text_content_transfer_encoding = '7bit';
+    /**
+     * @access private
+     * @var string
+     */
     private $_text_charset = 'utf-8'; // UTF-8 - iso-8859-1
 
-    // private variables
-
+    /**
+     * @access private
+     * @var string
+     */
     public $error;
 
-    public function __construct( $lDNSCheck = 'false' )
+    /**
+     * class constructor
+     * 
+     * @param string $lDNSCheck TRUE|FALSE on if DNS check is required for various applicable functions.
+     */
+    public function __construct($lDNSCheck = 'false')
     {
-
-        $this->checkDns( $lDNSCheck );
-
+        $this->checkDns($lDNSCheck);
     }
-
+    /**
+     *  class destructor 
+     */
     public function __destruct()
     {
 
@@ -93,11 +146,10 @@ class Email
     }
 
     /**
-    *
-    * @set undefined vars
+    * overload of __set
+    * 
     * @param string $index
     * @param mixed $value
-    * @return void
     *
     */
     public function __set($index, $value)
@@ -106,9 +158,9 @@ class Email
     }
     /**
     *
-    * @get variables
+    * overload of __get
     *
-    * @param mixed $index
+    * @param string $index object value to return
     *
     * @return mixed
     *
@@ -118,43 +170,35 @@ class Email
         return $this->vars[ $index ];
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: addFileAttachment
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE : $this->addAttachment( Full Path to File );
-    //       PURPOSE : To attach various files for inclusion into the mail message.
-    //        RETURNS: nothing
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * Attach various files/ file uploads/ file paths for mail message.
+     * 
+     * @param  array $aArray array containing all information about file to upload.
+     * 
+     * @return Email
+     */
     public function addFileAttachment($aArray = null)
     {
         if (is_array($aArray)) {
             $this->_attachments[] = $aArray;
         }
+        return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: addBlindCopyRecipient
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE : $this->bcc( email@address.com )
-    //       PURPOSE : Add a single address or multiple addresses to the bcc field.
-    //        RETURNS: none
-    //      COMMENTS : strings with comma's "," or semi-colons ";" are split and
-    //                 each address verified and then added or not included in the
-    //                 final message.
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**    
+     * Add a single address or multiple addresses to the bcc field.
+     * 
+     * strings with comma's "," or semi-colons ";" are split and 
+     * each address verified and then added or not included in the final message.
+     * 
+     * @param  string $cEmail  the email address or string of email addresses to 
+     * be added.
+     * 
+     * @author Nicolas Colbert
+     * @company Foonster Technology
+     * @created 03/13/2004
+     * @modified 07/22/2006
+    */
     public function addBlindCopyRecipient($cEmail = null)
     {
         if (strpos($cEmail, ',') > 0 || strpos($cEmail, ';') > 0) {
@@ -166,43 +210,33 @@ class Email
         } else {
             $this->isAddressValid($cEmail) ? $this->_bcc[] = $cEmail : false;
         }
+
+        return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: addCarbonCopyRecipient
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS: none
-    //      COMMENTS : strings with comma's "," or semi-colons ";" are split and
-    //                 each address verified and then added or not included in the
-    //                 final message.
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * add value to CC list
+     * 
+     * strings with comma's "," or semi-colons ";" are split and each 
+     * address verified and then added or not included in the final message.
+     * 
+     * @created 03/13/2014
+     * @modified 03/13/2014
+     * @param  string $cEmail string with email address to be added.
+     *
+     * @return Email
+     */
     public function addCarbonCopyRecipient( $cEmail = null )
     {
-
-        if ( strpos ( $cEmail , ',' ) > 0 || strpos ( $cEmail , ';' ) > 0 ) {
-
+        if (strpos($cEmail, ',') > 0 || strpos($cEmail, ';') > 0) {
             $aSplit = preg_split( '/[,|;]/' , $cEmail );
-
             foreach ($aSplit AS $cValue) {
-
                 $this->isAddressValid ( $cValue ) ? $this->_cc[] = $cValue : false;
-
             }
-
-
         } else {
-
-            $this->isAddressValid ( $cEmail ) ? $this->_cc[] = $cEmail : false;
-
+            $this->isAddressValid ($cEmail) ? $this->_cc[] = $cEmail : false;
         }
-
+        return $this;
     }
 
     // =============================================================================

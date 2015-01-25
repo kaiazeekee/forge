@@ -1,70 +1,71 @@
 <?php
-/******************************************************************************\
-+------------------------------------------------------------------------------+
-| Foonster Publishing Software                                                 |
-| Copyright (c) 2002 Foonster Technology                                       |
-| All rights reserved.                                                         |
-+------------------------------------------------------------------------------+
-|                                                                              |
-| OWNERSHIP. The Software and all modifications or enhancements to, or         |
-| derivative works based on the Software, whether created by Foonster          |
-| Technology or you, and all copyrights, patents, trade secrets, trademarks    |
-| and other intellectual property rights protecting or pertaining to any       |
-| aspect of the Software or any such modification, enhancement or derivative   |
-| work are and shall remain the sole and exclusive property of Foonster        |
-| Technology.                                                                  |
-|                                                                              |
-| LIMITED RIGHTS. Pursuant to this Agreement, you may: (a) use the Software    |
-| on one website only, for purposes of running one website only. You must      |
-| provide Foonster Technology with exact URL (Unique Resource Locator) of the  |
-| website you install the Software to; (b) modify the Software and/or merge    |
-| it into another program; c) transfer the Software and license to another     |
-| party if the other party agrees to accept the terms and conditions of this   |
-| Agreement.                                                                   |
-|                                                                              |
-| Except as expressly set forth in this Agreement, you have no right to use,   |
-| make, sublicense, modify, transfer or copy either the original or any copies |
-| of the Software or to permit anyone else to do so. You may not allow any     |
-| third party to use or have access to the Software. It is illegal to copy the |
-| Software and install that single program for simultaneous use on multiple    |
-| machines.                                                                    |
-|                                                                              |
-| PROPRIETARY NOTICES. You may not remove, disable, modify, or tamper with     |
-| any copyright, trademark or other proprietary notices and legends contained  |
-| within the code of the Software.                                             |
-|                                                                              |
-| COPIES.  "CUSTOMER" will be entitled to make a reasonable number of          |
-| machine-readable copies of the Software for backup or archival purposes.     |
-|                                                                              |
-| LICENSE RESTRICTIONS. "CUSTOMER" agrees that you will not itself, or through |
-| any parent, subsidiary, affiliate, agent or other third party:               |
-|(a) sell, lease, license or sub-license the Software or the Documentation;    |
-|(b) decompile, disassemble, or reverse engineer the Software, the Database,   |
-| in whole or in part; (c) write or develop any derivative software or any     |
-| other software program based upon the Software or any Confidential           |
-| Information, | except pursuant to authorized Use of Software, if any; (d) use|
-| the Software to provide services on a 'service bureau' basis; or (e) provide,|
-| disclose, | divulge or make available to, or permit use of the Software by   |
-| any unauthorized third party without Foonster Technology's prior written     |
-| consent.                                                                     |
-|                                                                              |
-+------------------------------------------------------------------------------+
-\******************************************************************************/
+
 namespace foonster\forge;
 
+/**
+ * The standard HTML rendering class
+ * 
+ * @copyright  Foonster Technology
+ * @author  Nicolas Colbert
+ */
 class Html
 {
 
-    private $_options = array();
+    /**
+     * array of values used to fill the attributes section of an html element
+     * 
+     * @access private
+     * @var array
+     */
     private $_attributes = array();
-    private $_value = '';
-    private $_tag = '';
-    private $_text = '';
-
-    private $_singletonTags = array('br','col','command','embed','hr','img','input','link','meta','param','source');
 
     /**
-     * []
+    * An array to hold the options available to html elments that support 
+    * options as possible values. 
+    * 
+    * @access private
+    * @var array
+    */
+    private $_options = array();
+
+    /**
+     * array of html tags that are self-closing
+     * 'br', 'col', 'command', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source'
+     * 
+     * @access private
+     * @var array
+     */
+    private $_singletonTags = array(
+        'br',
+        'col',
+        'command',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'link',
+        'meta',
+        'param',
+        'source');
+
+    /**
+     * the string to be used to identify the html element
+     * 
+     * @access private
+     * @var string
+     */
+    private $_tag = '';
+    
+    /**
+     * value to be used for value call
+     * 
+     * @access private
+     * @var array
+     */
+    private $_value = '';
+
+    /**
+     * class constructor
      */
     public function __construct()
     {
@@ -72,7 +73,7 @@ class Html
     }
 
     /**
-     * []
+     * class destructor
      */
     public function __destruct()
     {
@@ -80,8 +81,10 @@ class Html
     }
 
     /**
-     * [clear all the variables]
-     * @return none
+     * 
+     * clear all the protected variables
+     * 
+     * @return Html
      */
     private function clearVariables()
     {
@@ -90,10 +93,13 @@ class Html
         $this->_tag = '';
         $this->_text = '';
         $this->_value = '';
+
     }
 
     /**
-     * []
+     * return the closing html tag for _tag variable.
+     * 
+     * @return  string
      */
     
     public function closeTag()
@@ -101,13 +107,20 @@ class Html
         return '</' . $this->_tag . '>';
     }
 
+    
     /**
-    *
-    *
-    *
-    */
-
-    public static function httpResponse ($nRecord = null, $lExpanded = false)
+     * return the long or short message associated with current http response codes.
+     * 
+     * @param string $nRecord [the http response code to be evaluated]
+     * @param boolean $lExpanded [true|false]
+     * 
+     *     TRUE  - the long version of text will be returned
+     *     FALSE - the short version of text will be returned
+     * 
+     * @return  string
+     *  
+     */
+    public static function httpResponse($nRecord = '', $lExpanded = false)
     {
 
         $status_reason = array(
@@ -201,19 +214,25 @@ class Html
             999 => "The URL is returning a 200 but should be considered a 500"
         );
 
-        if ($lExpanded) {
-            return $status_msg[$nRecord];
+        if(!empty($nRecord)) {
+            return '';
         } else {
-            return $status_reason[$nRecord];
+            if ($lExpanded) {
+                return $status_msg[$nRecord];
+            } else {
+                return $status_reason[$nRecord];
+            }
         }
     }
 
     /**
-     * [linkText]  this takes a string and attempts to create hyperlinks for any matching text.
-     *             and does not link up certain tags that can cause issues.
-     *             
-     * @param  [string] $text [the string to be parsed]
-     * @return [string]       [the string with the appropriately marked up text.]
+     * create hyperlinks for any links that appear that they should be 
+     * clickable.  Excluding those tags that may cause issues.  This was built 
+     * for a forum text conversion.
+     * 
+     * @param  string $text [the string to be parsed]
+     * 
+     * @return string
      */
     public function linkText($text)
     {
@@ -247,9 +266,10 @@ class Html
     }
 
     /**
-     * @pingUrl
-     * @param  string $url : The URL to be tested.
-     * @return string : 
+     * ping the url and return the http response code.
+     * 
+     * @param  string the URL to be tested
+     * @return string 
      */
     public static function pingUrl($url = null)
     {
@@ -274,8 +294,10 @@ class Html
     }
 
     /**
-     * [openTag]
-     * @return string [description]
+     * create the opening of the requested tag.
+     * 
+     * @return string
+     * 
      */    
     public function openTag()
     {
@@ -287,9 +309,28 @@ class Html
 
         return $text . '>';
     }
+
     /**
-     * [render]:   This function is to make the creation of HTML DOM Elements
-     *             easier.
+     * remove anything from a string that appears to be a link.
+     * 
+     * @param  string $text [the string to be parsed]
+     *      
+     * @return string
+     */
+    public function removeLinks($text)
+    {
+        // match protocol://address/path/file.extension?some=variable&another=asf%
+        $text = preg_replace("/\s([a-zA-Z]+:\/\/[a-z][a-z0-9\_\.\-]*[a-z]{2,6}[a-zA-Z0-9\/\*\-\?\&\%]*)([\s|\.|\,])/i", '', $text);
+        // match www.something.domain/path/file.extension?some=variable&another=asf%
+        $text = preg_replace("/\s(www\.[a-z][a-z0-9\_\.\-]*[a-z]{2,6}[a-zA-Z0-9\/\*\-\?\&\%]*)([\s|\.|\,])/i", '', $text);
+        // match name@address
+        // $text = preg_replace("/\s([a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]*\@[a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]{2,6})([\s|\.|\,])/i",'', $text);
+        //
+        return $text;
+    }
+
+    /**
+     * render the html element based on current class values
      *             
      * @return string
      */
@@ -329,9 +370,12 @@ class Html
 
     }
     /**
-     * [setAttribute description]
-     * @param [type] $name  [description]
-     * @param [type] $value [description]
+     * set a attribute/value pair for a selected tag.
+     * 
+     * @param string $name  [the name associated with the attribute]
+     * @param string $value [the value associated with the attribute]
+     * 
+     * @return  Html
      */
     public function setAttribute($name = null, $value = null)
     {
@@ -340,22 +384,13 @@ class Html
     }
 
     /**
-     * [setAttributes description]
-     * @param [type] $array [description]
-     */
-    public function setAttributes($array)
-    {
-        if (is_array($array)) {
-            $this->_attributes = $array;
-        }
-        
-        return $this;
-    }
-
-    /**
-     * [setOption description]
-     * @param [type] $name  [description]
-     * @param [type] $value [description]
+     * 
+     * set options array
+     * 
+     * @param string $name  [the name associated with the option]
+     * @param string $value [the value associated with the option]
+     * 
+     * @return  Html
      */
     public function setOption($name = null, $value = null)
     {
@@ -365,8 +400,11 @@ class Html
     }
 
     /**
-     * [setOptions description]
-     * @param [type] $array [description]
+     * set the options variable to the provided array
+     * 
+     * @param array $array [array of name/value pairs]
+     * 
+     *  @return Html
      */
     public function setOptions($array)
     {
@@ -378,8 +416,11 @@ class Html
     }
 
     /**
-     * [setTag] - set the tag value
-     * @param none
+     * set the tag value
+     * 
+     * @param string $name [name of the tag]
+     * 
+     * @return  Html
      */
     public function setTag($name)
     {
@@ -387,9 +428,13 @@ class Html
         
         return $this;
     }
+
     /**
-     * [setValue]
-     * @param [string] $value 
+     * set value of element 
+     * 
+     * @param string $value [string for value]
+     * 
+     * @return  Html
      *
      */
     public function setValue($value)
@@ -402,22 +447,5 @@ class Html
         }
         return $this;
     }
-
-    /**
-     * [removeLinks description]
-     * @param  [type] $text [description]
-     * @return [type]       [description]
-     */
-    public function removeLinks($text)
-    {
-        // match protocol://address/path/file.extension?some=variable&another=asf%
-        $text = preg_replace("/\s([a-zA-Z]+:\/\/[a-z][a-z0-9\_\.\-]*[a-z]{2,6}[a-zA-Z0-9\/\*\-\?\&\%]*)([\s|\.|\,])/i", '', $text);
-        // match www.something.domain/path/file.extension?some=variable&another=asf%
-        $text = preg_replace("/\s(www\.[a-z][a-z0-9\_\.\-]*[a-z]{2,6}[a-zA-Z0-9\/\*\-\?\&\%]*)([\s|\.|\,])/i", '', $text);
-        // match name@address
-        // $text = preg_replace("/\s([a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]*\@[a-zA-Z][a-zA-Z0-9\_\.\-]*[a-zA-Z]{2,6})([\s|\.|\,])/i",'', $text);
-        //
-
-        return $text;
-    }
+    
 }

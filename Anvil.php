@@ -1,57 +1,13 @@
 <?php
-/******************************************************************************\
-+------------------------------------------------------------------------------+
-| Foonster Publishing Software                                                 |
-| Copyright (c) 2002 Foonster Technology                                       |
-| All rights reserved.                                                         |
-+------------------------------------------------------------------------------+
-|                                                                              |
-| OWNERSHIP. The Software and all modifications or enhancements to, or         |
-| derivative works based on the Software, whether created by Foonster          |
-| Technology or you, and all copyrights, patents, trade secrets, trademarks    |
-| and other intellectual property rights protecting or pertaining to any       |
-| aspect of the Software or any such modification, enhancement or derivative   |
-| work are and shall remain the sole and exclusive property of Foonster        |
-| Technology.                                                                  |
-|                                                                              |
-| LIMITED RIGHTS. Pursuant to this Agreement, you may: (a) use the Software    |
-| on one website only, for purposes of running one website only. You must      |
-| provide Foonster Technology with exact URL (Unique Resource Locator) of the  |
-| website you install the Software to; (b) modify the Software and/or merge    |
-| it into another program; c) transfer the Software and license to another     |
-| party if the other party agrees to accept the terms and conditions of this   |
-| Agreement.                                                                   |
-|                                                                              |
-| Except as expressly set forth in this Agreement, you have no right to use,   |
-| make, sublicense, modify, transfer or copy either the original or any copies |
-| of the Software or to permit anyone else to do so. You may not allow any     |
-| third party to use or have access to the Software. It is illegal to copy the |
-| Software and install that single program for simultaneous use on multiple    |
-| machines.                                                                    |
-|                                                                              |
-| PROPRIETARY NOTICES. You may not remove, disable, modify, or tamper with     |
-| any copyright, trademark or other proprietary notices and legends contained  |
-| within the code of the Software.                                             |
-|                                                                              |
-| COPIES.  "CUSTOMER" will be entitled to make a reasonable number of          |
-| machine-readable copies of the Software for backup or archival purposes.     |
-|                                                                              |
-| LICENSE RESTRICTIONS. "CUSTOMER" agrees that you will not itself, or through |
-| any parent, subsidiary, affiliate, agent or other third party:               |
-|(a) sell, lease, license or sub-license the Software or the Documentation;    |
-|(b) decompile, disassemble, or reverse engineer the Software, the Database,   |
-| in whole or in part; (c) write or develop any derivative software or any     |
-| other software program based upon the Software or any Confidential           |
-| Information, | except pursuant to authorized Use of Software, if any; (d) use|
-| the Software to provide services on a 'service bureau' basis; or (e) provide,|
-| disclose, | divulge or make available to, or permit use of the Software by   |
-| any unauthorized third party without Foonster Technology's prior written     |
-| consent.                                                                     |
-|                                                                              |
-+------------------------------------------------------------------------------+
-\******************************************************************************/
+/**
+* @author Nicolas Colbert <support@foonster.com>
+* @copyright 2002 Foonster Technology
+*/
 namespace foonster\forge;
-
+/**
+ * A set of methods developed through the various years that are commonly needed 
+ * on numerous projects 
+ */
 class Anvil
 {
     public $error;
@@ -62,35 +18,31 @@ class Anvil
     private $_attributes = array();
     private $_dbh; // the database handle.
 
+    /**
+     * 
+     */
     public function __construct()
     {
 
     }
 
+    /**
+     * 
+     */
     public function __destruct()
     {
 
     }
 
     /**
-    *
-    * @set undefined vars
-    * @param string $index
-    * @param mixed $value
-    * @return void
-    *
+     * 
     */
     public function __set($index, $value)
     {
         $this->_vars[$index] = $value;
     }
+    
     /**
-    *
-    * @get variables
-    *
-    * @param mixed $index
-    *
-    * @return mixed
     *
     */
     public function __get($index)
@@ -98,18 +50,17 @@ class Anvil
         return $this->_vars[$index];
     }
 
-
     /**
-     * [array_to_columns] - convert an array to various arrays so the 
+     * array_to_columns - convert an array to various arrays so the 
      *                      values are in columns
-     * @param  [array]  $aArray     [oringal array to sort]
-     * @param  integer  $nCols      [number of columns to return]
-     * @param  string   $cDirection [vertical sorting vs horizontal sorting]
-     * @return [array]              [final array with values in new order.]
+     * 
+     * @param  array   $aArray     [oringal array to sort]
+     * @param  integer $nCols      [number of columns to return]
+     * @param  string  $cDirection [vertical sorting vs horizontal sorting]
+     * @return array               [final array with values in new order.]
      */
-    public function arrayToColumns ($aArray, $nCols = 2, $cDirection = 'vertical')
+    public function arrayToColumns($aArray, $nCols = 2, $cDirection = 'vertical')
     {
-
         $aReturn = array();   
         $nRows = @ sizeof($aArray);
         for( $i=1; $i<= $nCols; $i++) { $aReturn[$i] = array(); }
@@ -148,9 +99,12 @@ class Anvil
     } 
     
     /**
-     * [attributeExists]
-     * @param  string $cAttribute [description]
+     * attributeExists - determine if attribute is currently assigned to this object.
+     * 
+     * @param  string $cAttribute [name of attribute to be located.]
+     * 
      * @return boolean [Returns TRUE on success or FALSE on failure.]
+     * 
      */
     public static function attributeExists($cAttribute)
     {
@@ -325,42 +279,19 @@ class Anvil
     }
 
     /**
-     * [connectToDatabase description]
-     * @param  string $database   [the database to connect to]
-     * @param  string $user       [user associated with connection]
-     * @param  string $password   [password associated with connection]
-     * @param  string $connection [connection host]
-     * @return none
-     */
-    public function connectToDatabase($database = '', $user = '', $password = '', $connection = 'localhost')
-    {
-        try {
-            $this->_dbh = new \PDO("mysql:host=" . $connection . ";dbname=" . $database, $user, $password);  
-            $this->_dbh->setAttribute( \PDO::MYSQL_ATTR_FOUND_ROWS, true);   
-            $this->_dbh->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
-            $this->_dbh->setAttribute (\PDO::ATTR_ERRMODE, \PDO::ERRMODE_WARNING );
-        } catch (\PDOException $e) {
-            $this->error = "Error!: " . $e->getMessage() . "<br/>";
-        } catch (\Exception $e) {
-            $this->error = "Error!: " . $e->getMessage() . "<br/>";
-        }
-    }
-
-    /**
-     * [changeDatabase description]
-     * @param  [type] $dbh [description]
-     * @return [type]      [description]
-     */
-    public function changeDatabase($dbh)
-    {
-        $this->_dbh = $dbh;
-    }
-
-    /**
-     * [formatDate description]
-     * @param  [type] $date [description]
-     * @param  string $type [description]
-     * @return [type]       [description]
+     * [formatDate - class to format dates in predefined methods of display]
+     * 
+     * @param  string $date [date string to be converted]
+     * @param  string $type what type of string to be returned.
+     * 
+     *     expanded
+     *     fancy
+     *     fancywithhours
+     *     europe
+     *     standard
+     * 
+     * 
+     * @return string the text of the requested verison to be returned.
      */
     public function formatDate($date, $type = 'mdY')
     {
@@ -697,13 +628,13 @@ class Anvil
 
 
     /**
-     * [getAge] - compute the age in years base on today vs date.
+     * compute the number of years between two dates.
      *
      *  This function does not suffer the rounding issue found in other solutions when 
      *  you start hitting the 70+ range.
      * 
-     * @param  string $cDOB [string representing birthday]
-     * @return [integer]      [number of years between the two dates.]
+     * @param  string $cDOB string representing birthday]
+     * @return integer number of years between the two dates.
      */
     public static function getAge($cDOB)
     {
@@ -1094,8 +1025,12 @@ class Anvil
     }
 
     /**
-     * [pi]
-     * @return integer calculated to 10,000 digits
+     * [pi] the value of pi
+     * 
+     * @staticvar the number pi calculated out to 10,000 digits.
+     *      
+     * @return integer pi returned to the required number of places.
+     * 
      */
     public static function pi($length = 24)
     {
@@ -1104,9 +1039,10 @@ class Anvil
     }
 
     /**
-     * [properCase description]
-     * @param  [type] $cString [description]
-     * @return [type]          [description]
+     * convert a string to proper case.
+     * 
+     * @param  string $cString [the string to be modified]
+     * @return string          the modified string
      */
     public static function properCase($cString)
     {
@@ -1406,8 +1342,9 @@ class Anvil
     }
 
     /**
-     * [rmDirectory description]
-     * @param  [type]  $directory [description]
+     * remove directory
+     * 
+     * @param  string  $directory [directory path]
      * @param  boolean $empty     [description]
      * @return [type]             [description]
      */
@@ -1451,69 +1388,30 @@ class Anvil
     }
 
     /**
-     * [sql]
-     * @param  string $sql    [the query to run]
-     * @param  array  $params [the parameters to bind to the query string.]
-     * @return mixed
+     * clean a variable to follow the contstraints to ensure it only contains
+     * valid characters
+     * 
+     * @param  string $value     [the string to be scrubed]
+     * @param  string $cType     [what kind of scrubbing is required]
+     * 
+     *     ALPHA: only alpha characters
+     *     TOKEN: only the characters A-Za-z0-9\-_/
+     *     ALPHA_NUM: only Alpha Numeric values
+     *     SIMPLE: only standard input from the keyboard
+     *     EMAIL: only a properly formatted email address.
+     *     HYPERLINK: only a properly formatted hyperlink
+     *     WHOLE_NUM: only a whole number - no floats
+     *     FLOAT: characters that allow for floating numbers.
+     *     FORMAT_NUM: characters that allow for a formatted number.
+     *     SQL_INJECT: remove common characters taht are using for SQL injection.
+     *     REMOVE_SPACES: no spaces allowed.
+     *     REMOVE_DOUBLESPACE: no doublespaces allowed.
+     *     BASIC: allow only very generic keyboard values.
+     * 
+     * @param  string $stopWords [a file or array of words that are not allowed]
+     * @return string the variable passed with only the allowed characters
      */
-    public function sql($sql, $params = array())
-    {
-        try {
-            $sth = $this->_dbh->prepare($sql);
-            if (!$sth) {
-                echo "\nPDO::errorInfo():\n";
-                print_r($dbh->errorInfo());
-            }
-            $sth->execute($params);
-
-            if ($sth->rowCount() == 1) {
-                return $sth->fetch(\PDO::FETCH_OBJ);
-            } else {
-                return $sth;
-            }
-        } catch ( \PDOException $e) {
-            return $e->getCode() . ':' . $e->getMessage();
-        } catch ( \Exception $e ) {
-            return $e->getCode() . ':' . $e->getMessage();
-        }
-    }    
-
-    /**
-     * [runSql]
-     * @param  string $sql    [the query to run]
-     * @param  array  $params [the parameters to bind to the query string.]
-     * @return mixed
-     */
-    public function runSql($sql, $params = array())
-    {
-        try {
-            $sth = $this->_dbh->prepare($sql);
-            if (!$sth) {
-                echo "\nPDO::errorInfo():\n";
-                print_r($dbh->errorInfo());
-            }
-            $sth->execute($params);
-
-            if ($sth->rowCount() == 1) {
-                return $sth->fetch(\PDO::FETCH_OBJ);
-            } else {
-                return $sth;
-            }
-        } catch ( \PDOException $e) {
-            return $e->getCode() . ':' . $e->getMessage();
-        } catch ( \Exception $e ) {
-            return $e->getCode() . ':' . $e->getMessage();
-        }
-    }
-
-    /**
-     * [scrubVar description]
-     * @param  [type] $value     [description]
-     * @param  string $cType     [description]
-     * @param  string $cWordFile [description]
-     * @return [type]            [description]
-     */
-    public static function scrubVar($value, $cType = 'BASIC', $cWordFile = '')
+    public static function scrubVar($value, $cType = 'BASIC', $stopWords = '')
     {
 
         $cType = strtoupper(trim($cType));
@@ -1632,213 +1530,11 @@ class Anvil
     }
 
     /**
-     * [sqlAddRecord description]
-     * @param  [type] $table     [description]
-     * @param  [type] $variables [description]
-     * @return [type]            [description]
-     */
-    public function sqlAddRecord($table, $variables)
-    {
-    
-        is_object($variables) ? $variables = (array) $variables : false;
-
-        $sql = $this->sqlBuildQuery($table, 'insert', $variables);
-        $fields = $this->sqlSetVars($sql, $variables);
-        $sth = $this->sqlRunQuery($sql, $fields);
-
-        $err = $sth->errorInfo();
-        if ($err[1] > 0) {
-            $this->error = $err[2];
-            return 0;
-        } else {
-            return $this->sqlInsertId();
-        }
-    }
-
-    /**
-     * [sqlDump description]
-     * @return [type] [description]
-     */
-    public function sqlDump()
-    {
-        $this->dumpVariable($this->_dbh->errorInfo());
-    }
-
-    /**
-     * [sqlErrorInfo description]
-     * @return [type] [description]
-     */
-    public function sqlErrorInfo()
-    {
-        return $this->_dbh->errorInfo();
-    }
-
-    /**
-     * [sqlInsertId description]
-     * @return [type] [description]
-     */
-    public function sqlInsertId()
-    {
-        return $this->_dbh->lastInsertId();
-    }
-
-    /**
-     * [sqlRunQuery description]
-     * @param  [type] $sql    [description]
-     * @param  array  $params [description]
-     * @return [type]         [description]
-     */
-    public function sqlRunQuery($sql, $params = array())
-    {
-    
-        try {
-            $sth = $this->_dbh->prepare($sql);
-            if (!$sth) {
-                echo "\nPDO::errorInfo():\n";
-                print_r($dbh->errorInfo());
-            }
-            $sth->execute($params);
-
-            return $sth;
-        } catch ( \PDOException $e) {
-            return $e->getCode() . ':' . $e->getMessage();
-        } catch ( \Exception $e ) {
-            return $e->getCode() . ':' . $e->getMessage();
-        }
-    }
-
-    /**
-     * [sqlSetVars description]
-     * @param  [type] $sql    [description]
-     * @param  array  $params [description]
-     * @return [type]         [description]
-     */
-    public function sqlSetVars($sql, $params = array())
-    {
-        $vars = array();
-        // this is faster and SQL is not harmed by the double space.
-        $sql = str_replace(',', ', ', $sql);
-        preg_match_all("/:(.*?)\s/", $sql, $matches);
-        foreach ($matches[1] as $value) {
-            $value = str_replace(',', '', $value);
-            array_key_exists($value, $params) ? $vars[ $value ] = $params[ $value ] : false;
-        }
-
-        return $vars;
-    }
-
-    /**
-     * [sqlBuildQuery]
-     * @param  string $type        [description]
-     * @param  [type] $table       [description]
-     * @param  array  $variables   [description]
-     * @param  array  $constraints [description]
-     * @param  string $limit       [description]
-     * @return [type]              [description]
-     */
-    public function sqlBuildQuery($table, $type = 'INSERT', $variables = array(), $constraints = array(), $limit = '1')
-    {
-
-        $sql = '';
-        $fields = $values = $updates = $columns = array();
-        $type = strtoupper(trim($type));
-        $sth = $this->_dbh->prepare('DESCRIBE ' . $table);
-
-        $sth->execute();
-
-        $limit > 0 ? $limit = " LIMIT $limit" : $limit = '';
-
-        $tableinfo = $sth->fetchAll(\PDO::FETCH_ASSOC);
-        // add field names by name
-        foreach ($tableinfo as $key => $array) {
-            strtoupper($array['Key']) == 'PRI' ? $primary = $array['Field'] : false;
-            $columns[$array['Field']] = $array;
-        }
-
-        if ($type == 'SELECT') {
-            foreach ($columns as $key => $array) {
-                if (array_key_exists($array['Field'], $variables) && !empty($variables[ $array['Field'] ])) {
-                    $updates[] = $array['Field'] . " = :$array[Field]";
-                }
-            }
-            $sql = "SELECT FROM $table WHERE " . implode(' AND ', $updates) . "$limit";
-        } elseif ($type == 'DELETE') {
-            foreach ($columns as $key => $array) {
-                if (array_key_exists($array['Field'], $variables) && !empty( $variables[ $array['Field'] ] )) {
-                    $updates[] = $array['Field'] . " = :$array[Field]";
-                }
-            }
-            $sql = "DELETE FROM $table WHERE " . implode(' AND ', $updates) . "$limit";
-        } elseif ($type == 'UPDATE') {
-            foreach ($columns as $key => $array) {
-                if (array_key_exists($array['Field'], $variables) && $primary != $array['Field']) {
-                    $updates[] = $array['Field'] . " = :$array[Field]";
-                }
-            }
-            if (sizeof($constraints) > 0) {
-                foreach ($constraints as $key => $array) {
-                    $where[] = $key . " = :$key";
-                }
-                $sql = "UPDATE $table SET " . implode(',', $updates) . " WHERE " . implode(' AND ', $where) . "$limit";
-            } else {
-                $sql = "UPDATE $table SET " . implode(',', $updates) . " WHERE " . $primary . " = :" . $primary . "$limit";
-            }
-        } else {
-            // check to see all null value no fields are accounted for.
-            foreach ($columns as $key => $array) {
-                if ($array['Field'] != $primary) {
-                    if (!array_key_exists($array['Field'], $variables)) {
-                        if ($array['Null'] == 'NO') {
-                            if (!in_array($array['Field'], $fields)) {
-                                $fields[] = $array['Field'];
-                                $values[] = "'$array[Default]'";
-                            }
-                        }
-                    } else {
-                        $fields[] = $array['Field'];
-                        $values[] = ":$array[Field]";
-                    }
-                }
-            }
-            $sql = "INSERT INTO $table ( " . implode(' , ', $fields) . ' ) VALUES ( ' . implode(' , ', $values) . " );";
-        }
-        
-        return $sql;
-    }
-
-    /**
-    * [updaterecord description]
-    * @param  [type] $table     [description]
-    * @param  array  $variables [description]
-    * @param  [type] $error     [description]
-    * @return [type]            [description]
-    */
-    public function sqlUpdateRecord($table, $variables)
-    {
-     
-        is_object($variables) ? $variables = (array) $variables : false;
-
-        $sql = $this->sqlBuildQuery($table, 'update', $variables);
-        $fields = $this->sqlSetVars($sql, $variables);
-        $sth = $this->sqlRunQuery($sql, $fields);
-        $err = $sth->errorInfo();
-
-        if ($err[1] > 0) {
-            $this->error = $err[2];
-            return 0;
-        } else {
-            if ($err[1] == 0) {
-                return 1;
-            } else {
-                return $sth->rowCount();
-            }
-        }
-    }
-
-    /**
-     * [stripFileExtension description]
-     * @param  [type] $value [description]
-     * @return [type]        [description]
+     * remove file extension from string
+     * 
+     * @param  string $value [string to be evaluated]
+     * 
+     * @return string the string without the file extension
      */
     public static function stripFileExtension($value)
     {
@@ -1853,7 +1549,7 @@ class Anvil
     /**
      * [stripWhiteSpace - remove extra white-space from string.]
      * @param  string $cStr [string to be modified]
-     * @return string       string with white space removed.
+     * @return string string with white space removed.
      */
     public static function stripWhiteSpace($cStr)
     {
@@ -1861,10 +1557,11 @@ class Anvil
     }
 
     /**
-     * [substrWord description]
-     * @param  [type]  $cString [description]
-     * @param  integer $nLen    [description]
-     * @return [type]           [description]
+     * return a specified number of words from a text string
+     * 
+     * @param  string  $cString [string to extract substring]
+     * @param  integer $nLen    [number of words to be extracted]
+     * @return string  string with complete number of words, it will append ... if over the limit
      */
     public static function substrWord($cString, $nLen = 250)
     {
@@ -1882,27 +1579,25 @@ class Anvil
         }
     }
 
-
     /**
-     * [swapText description]
-     * @param  [type] $cText    [description]
-     * @param  [type] $cReplace [description]
-     * @param  [type] $cWith    [description]
-     * @return [type]           [description]
+     * swaptext in string
+     * 
+     * @param  string $cText    [string to evaluate]
+     * @param  string $cReplace [string to find]
+     * @param  string $cWith    [string to replace with]
+     * @return string           [evaluated string]
      */
     public function swapText ($cText, $cReplace, $cWith)
     {
-
         $cText = str_replace('&lt;@' . strtoupper($cReplace) . '@&gt;', $cWith, $cText);
         $cText = str_replace('<@' . strtoupper($cReplace) . '@>', $cWith, $cText);
         return $cText;
-
     }
 
     /**
      * [ucase] : convert string to uppercase.
      * @param  string $cString
-     * @return string
+     * @return string string in all uppercase
      */
     public static function ucase($cString)
     {
@@ -1910,8 +1605,9 @@ class Anvil
     }
 
     /**
-     * [uploadFile description]
-     * @param  string $file   [target to file to test for file upload]
+     * upload file to server usin
+     * 
+     * @param  string $file   [path to file to store on server]
      * @param  string $target [target where to save file]
      * @return boolean 
      */
@@ -1930,15 +1626,14 @@ class Anvil
 
 
     /**
-     * [userTime description]
-     * @param  [type] $cDate [description]
+     * 
+     * @param  string $cDate []
      * @return [type]        [description]
      */
     public static function userTime($cDate)
     {
         if (!empty($cDate) && $cDate != '0000-00-00 00:00:00') {
             return date('Y-m-d H:i:s', (strtotime($cDate) + ((substr(date('c'), -6, 3) * 60) * 60))) . ' ' . date('T');
-
         } else {
             return '';
         }
@@ -1947,8 +1642,11 @@ class Anvil
     /**
      * [validateCreditCard - test if provided card number is valid.]
      * @param  string $cardnumber [string to be tested]
+     * 
+     *     Test Card Number: 4007000000027
+     * 
      * @param  string $cardname   [string identifying card type to be tested]
-     * @param  string $error      [error code if error detected]
+     * @param  string $error      [error code if error detected and passed by reference]
      * @return  boolean           [true/false for valid card number]
      */
     public function validateCreditCard ($cardnumber, $cardname, &$error)
@@ -1958,7 +1656,6 @@ class Anvil
 
         if ($cardnumber == '4007000000027') {
             return true;
-
         }
 
         $cards = array (
@@ -2199,69 +1896,52 @@ class Anvil
     }
 
     /**
+    * write file to server
     *
+    * @param  string  $cContent    [the data to be written]
+    * @param  string  $cPath       [the file path to be written]
+    * @param  string  $cMode       [the file mode to be used]
+    *     
+    * 'r'  Open for reading only; place the file pointer at the beginning of the file.
     *
+    * 'r+' Open for reading and writing; place the file
+    * pointer at the beginning of the file.
     *
-    *          NAME: writeToFile
-    *  DATE CREATED: 09/18/2004
-    * DATE MODIFIED: 09/18/2004
-    *        USAGE : $obj->writeToFile ()
-    *      PURPOSE : Write a text string to the specified path.
-    *        RETURNS: boolean true / false
-    *      COMMENTS :
+    * 'w'  Open for writing only; place the file pointer at
+    * the beginning of the file and truncate the file to zero length. If the file does not
+    * exist, attempt to create it.
     *
-    *                   $cContent = the data that is to be written to the file.
+    * 'w+' Open for reading and writing; place the file pointer
+    * at the beginning of the file and truncate the file to zero length. If the file does not
+    * exist, attempt to create it.
     *
-    *                   $cPath    = the file path that is to be written.
+    * 'a'  Open for writing only; place the file pointer at the
+    * end of the file. If the file does not exist, attempt to create it.
     *
-    *                   $cMode    = the file mode that is to be used.
+    * 'a+' Open for reading and writing; place the file pointer
+    * at the end of the file. If the file does not exist, attempt to create it.
     *
-    *                               'r'  Open for reading only; place the file pointer at
-    *                               the beginning of the file.
+    * 'x'  Create and open for writing only; place the file
+    * pointer at the beginning of the file. If the file already exists, the fopen() call will
+    * fail by returning FALSE and generating an error of level E_WARNING. If the file does not
+    * exist, attempt to create it. This is equivalent to specifying O_EXCL|O_CREAT flags for the
+    * underlying open(2) system call.
     *
-    *                               'r+' Open for reading and writing; place the file
-    *                               pointer at the beginning of the file.
+    * 'x+' Create and open for reading and writing; otherwise it
+    * has the same behavior as 'x'.
     *
-    *                               'w'  Open for writing only; place the file pointer at
-    *                               the beginning of the file and truncate the file to zero length. If the file does not
-    *                               exist, attempt to create it.
+    * 'c'  Open the file for writing only. If the file does
+    * not exist, it is created. If it exists, it is neither truncated (as opposed to 'w'),
+    * nor the call to this function fails (as is the case with 'x'). The file pointer is
+    * positioned on the beginning of the file. This may be useful if it's desired to get an
+    * advisory lock (see flock()) before attempting to modify the file, as using 'w' could
+    * truncate the file before the lock was obtained (if truncation is desired,
+    * ftruncate() can be used after the lock is requested).
     *
-    *                               'w+' Open for reading and writing; place the file pointer
-    *                               at the beginning of the file and truncate the file to zero length. If the file does not
-    *                               exist, attempt to create it.
-    *
-    *                               'a'  Open for writing only; place the file pointer at the
-    *                               end of the file. If the file does not exist, attempt to create it.
-    *
-    *                               'a+' Open for reading and writing; place the file pointer
-    *                               at the end of the file. If the file does not exist, attempt to create it.
-    *
-    *                               'x'  Create and open for writing only; place the file
-    *                               pointer at the beginning of the file. If the file already exists, the fopen() call will
-    *                               fail by returning FALSE and generating an error of level E_WARNING. If the file does not
-    *                               exist, attempt to create it. This is equivalent to specifying O_EXCL|O_CREAT flags for the
-    *                               underlying open(2) system call.
-    *
-    *                               'x+' Create and open for reading and writing; otherwise it
-    *                               has the same behavior as 'x'.
-    *
-    *                               'c'  Open the file for writing only. If the file does
-    *                               not exist, it is created. If it exists, it is neither truncated (as opposed to 'w'),
-    *                               nor the call to this function fails (as is the case with 'x'). The file pointer is
-    *                               positioned on the beginning of the file. This may be useful if it's desired to get an
-    *                               advisory lock (see flock()) before attempting to modify the file, as using 'w' could
-    *                               truncate the file before the lock was obtained (if truncation is desired,
-    *                               ftruncate() can be used after the lock is requested).
-    *
-    *                               'c+' Open the file for reading and writing; otherwise it has the same behavior as 'c'.
-    */
-    /**
-     * [writeToFile description]
-     * @param  string  $cContent    [description]
-     * @param  string  $cPath       [description]
-     * @param  string  $cMode       [description]
-     * @param  integer $nPermission [description]
-     * @return [type]               [description]
+    * 'c+' Open the file for reading and writing; otherwise it has the same behavior as 'c'. 
+    * 
+     * @param  integer $nPermission [numerical representation of file permissions.]
+     * @return boolean TRUE/FALSE if file was stored 
      */
     public static function writeToFile($cContent = '', $cPath = '', $cMode = 'w+', $nPermission = 0777)
     {    
@@ -2285,7 +1965,6 @@ class Anvil
      */
     public function xmlDataDump($aArray, &$cOutput)
     {
-
         if (is_array($aArray)) {
             foreach ($aArray as $c => $v) {
                 if (is_array($v)) {

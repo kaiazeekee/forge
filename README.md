@@ -3,8 +3,6 @@
 This is a collection of stand-alone classes that Foonster Technology 
 utilizes in various projects where needed.  
 
-Let me know if you need anything added or more documentation.
-
 ## Classes
 
 ### EMAIL

@@ -1,57 +1,16 @@
 <?php
-/******************************************************************************\
-+------------------------------------------------------------------------------+
-| Foonster Publishing Software                                                 |
-| Copyright (c) 2002 Foonster Technology                                       |
-| All rights reserved.                                                         |
-+------------------------------------------------------------------------------+
-|                                                                              |
-| OWNERSHIP. The Software and all modifications or enhancements to, or         |
-| derivative works based on the Software, whether created by Foonster          |
-| Technology or you, and all copyrights, patents, trade secrets, trademarks    |
-| and other intellectual property rights protecting or pertaining to any       |
-| aspect of the Software or any such modification, enhancement or derivative   |
-| work are and shall remain the sole and exclusive property of Foonster        |
-| Technology.                                                                  |
-|                                                                              |
-| LIMITED RIGHTS. Pursuant to this Agreement, you may: (a) use the Software    |
-| on one website only, for purposes of running one website only. You must      |
-| provide Foonster Technology with exact URL (Unique Resource Locator) of the  |
-| website you install the Software to; (b) modify the Software and/or merge    |
-| it into another program; c) transfer the Software and license to another     |
-| party if the other party agrees to accept the terms and conditions of this   |
-| Agreement.                                                                   |
-|                                                                              |
-| Except as expressly set forth in this Agreement, you have no right to use,   |
-| make, sublicense, modify, transfer or copy either the original or any copies |
-| of the Software or to permit anyone else to do so. You may not allow any     |
-| third party to use or have access to the Software. It is illegal to copy the |
-| Software and install that single program for simultaneous use on multiple    |
-| machines.                                                                    |
-|                                                                              |
-| PROPRIETARY NOTICES. You may not remove, disable, modify, or tamper with     |
-| any copyright, trademark or other proprietary notices and legends contained  |
-| within the code of the Software.                                             |
-|                                                                              |
-| COPIES.  "CUSTOMER" will be entitled to make a reasonable number of          |
-| machine-readable copies of the Software for backup or archival purposes.     |
-|                                                                              |
-| LICENSE RESTRICTIONS. "CUSTOMER" agrees that you will not itself, or through |
-| any parent, subsidiary, affiliate, agent or other third party:               |
-|(a) sell, lease, license or sub-license the Software or the Documentation;    |
-|(b) decompile, disassemble, or reverse engineer the Software, the Database,   |
-| in whole or in part; (c) write or develop any derivative software or any     |
-| other software program based upon the Software or any Confidential           |
-| Information, | except pursuant to authorized Use of Software, if any; (d) use|
-| the Software to provide services on a 'service bureau' basis; or (e) provide,|
-| disclose, | divulge or make available to, or permit use of the Software by   |
-| any unauthorized third party without Foonster Technology's prior written     |
-| consent.                                                                     |
-|                                                                              |
-+------------------------------------------------------------------------------+
-\******************************************************************************/
+/**
+ *                                                                   
+ */
 namespace foonster\forge;
-
+/**
+ * A database abstraction class
+ * 
+ * 
+ * @author  Nicolas Colbert
+ * @copyright (c) 2002 Foonster Technology                                     
+ *                                                                    
+ */
 class Database
 {
     private $dbh;
@@ -69,6 +28,7 @@ class Database
 
     /**
      * [__construct]
+     * 
      * @param string $database   [the database name]
      * @param string $user       [the user associated with the database connection]
      * @param string $pass       [the password associated with the database connection]
@@ -98,9 +58,10 @@ class Database
     }
 
     /**
-     * [buildQuery]
-     * @param  string $type        [the table name to use as a template to build query]
-     * @param  [type] $table       [what type of CRUD operation is occuring]
+     * build a PDO query string
+     * 
+     * @param  string $table       [the table name to use as a template to build query]
+     * @param  string $type        [what type of CRUD operation is occuring]     
      * @param  array  $variables   [list of variables to include in the record update]
      * @param  array  $constraints [list of constraining variables]
      * @param  string $limit       [limit on returned or impacted records]
@@ -182,9 +143,9 @@ class Database
     }
 
     /**
-     * [changeDatabase]
+     * change the database 
      * 
-     * @param  string - $database [name of database to change to.]
+     * @param  string $database [name of the database]
      * 
      * @return none
      */
@@ -195,7 +156,7 @@ class Database
     }
 
     /**
-     * [connect] - connect to Database
+     * establish a connection to the requested database
      * 
      * @return none
      */
@@ -227,9 +188,9 @@ class Database
     }
 
     /**
-     * [connectionError]
+     * return the value stored in the connectionError variable
      * 
-     * @return string [description]
+     * @return boolean TRUE/FALSE - if the connect command had an issue.
      * 
      */
     public function connectionError() 
@@ -238,24 +199,26 @@ class Database
     }
 
     /**
-     * [connectionInfo]
+     * get current connection settings 
      * 
-     * @return [string] a json string containing all information re
+     * @param string $return [what type or method to be returned]
+     * 
+     * @return mixed string|array [values for the connection]
      */
-    public function connectionInfo($return = 'array')
-    {
-        return json_encode(array(
-            'connection' => $this->dbConn,
-            'database' => $this->dbName,
-            'user' => $this->dbUser,
-            'password' => $this->dbPass
-            ));
+    public function connectionInfo()
+    {        
+        return array(
+        'connection' => $this->dbConn,
+        'database' => $this->dbName,
+        'user' => $this->dbUser,
+        'password' => $this->dbPass
+        );
     }
     
     /**
      * [db_split_sql]
      * 
-     * @param  [type] $sql [description]
+     * @param  string $sql [string to be parsed into smaller sql statements.]
      * @return [type]      [description]
      * 
      */
@@ -292,9 +255,9 @@ class Database
 
     /**
      * 
-     * [describeTable]
+     * query the currently selected database for properties DESCRIBE
      * 
-     * @param  string $table [what table obtain information about.]
+     * @param  string $table [name of table]
      * 
      * @return array         [array attributes]
      * 
@@ -314,9 +277,9 @@ class Database
 
     /**
      * 
-     * [errorInfo description]
+     * return message from errorInfo command
      * 
-     * @return [type] [description]
+     * @return string
      * 
      */
     public function errorInfo()
@@ -326,7 +289,7 @@ class Database
 
     /**
      * 
-     * [errorMessage]
+     * return value of errorMessage value
      * 
      * @return string 
      * 
@@ -350,9 +313,9 @@ class Database
 
     /**
      * 
-     * [lastInsertId]
+     * id from the last insert command with auto-increment.
      * 
-     * @return integer number id from the last insert command with auto-increment.
+     * @return integer
      * 
      */
     public function lastInsertId()
@@ -361,15 +324,18 @@ class Database
     }
 
     /**
-     * [runQuery]
+     * 
      * 
      * @param  string $sql    [the query to run]
      * @param  array  $params [the parameters to bind to the query string.]
-     * @return mixed
+     * @return mixed object|array
      * 
      */
     public function runQuery($sql, $params = array())
     {
+
+        $queryType = substr(trim($sql), 0, strpos($sql, " "));
+
         // ensure that only 
         $matches = array();
         foreach ($params as $key => $value) {
@@ -385,7 +351,16 @@ class Database
                 print_r($this->dbh->errorInfo());
             }
             $sth->execute($matches);
-            return $sth;            
+            
+            if (strtoupper($queryType) == 'SELECT') {
+                if ($sth->rowCount() == 1) {
+                    return $sth->fetch(\PDO::FETCH_OBJ);
+                } else {
+                    return $sth;
+                }                
+            } else {
+                return $sth;
+            }    
         } catch ( \PDOException $e) {
             return $e->getCode() . ':' . $e->getMessage();
         } catch ( \Exception $e ) {
@@ -394,7 +369,7 @@ class Database
     }    
 
     /**
-     * [runSourceCommand]
+     * PDO command to run a SOURCE command File
      * 
      * @param  string $sqlfile [path to .sql file]
      * 
@@ -417,12 +392,12 @@ class Database
 
     
     /**
-     * [setCredentials] - set the user/pw combonation to be used by the 
-     *                    database connection.
+     * set the user/pw combonation to be used by the database connection.
      *                    
      * @param string $user [the user associated with the database connection]
      * @param string $pw   [the password associated with the database connection]
      * 
+     * @return Database 
      */
     public function setCredentials($user = '', $pw = '')
     {
@@ -432,9 +407,11 @@ class Database
     }
 
     /**
-     * [setDatabase] - set the database variable.
+     * set the database variable.
      * 
-     * @param none
+     * @param string [the name of the database to be used]
+     * 
+     * @return Database 
      * 
      */
     public function setDatabase($database)
@@ -444,10 +421,12 @@ class Database
     }
 
     /**
-     * [setHost] - set the Host variable.
+     *  set the Host variable.
      * 
      * @param string $dsn [The Data Source Name, or DSN, contains the information required 
      *                    to connect to the database. ]
+     * 
+     * @return Database 
      */
     public function setHost($host)
     {
@@ -456,10 +435,12 @@ class Database
     }    
 
     /**
-     * [setVariables]
+     * set the variables used in PDO requests to match.
      * 
-     * @param [type] $sql    [description]
-     * @param array  $params [description]
+     * @param string $sql    [sql string to use as map]
+     * @param array  $params [array used to populate variables for query]
+     * 
+     * @return Database
      * 
      */
     public function setVariables($sql, $params = array())
@@ -467,7 +448,6 @@ class Database
         $vars = array();        
         $sql = str_replace(',', ', ', $sql);
         preg_match_all("/:(.*?)\s/", $sql, $matches);
-
         foreach ($matches[1] as $value) {
             $value = str_replace(',', '', $value);
             array_key_exists($value, $params) ? $vars[$value] = $params[$value] : false;
@@ -477,10 +457,9 @@ class Database
     }        
 
     /**
-     * [showDatabases] - return a list of databases the current user is able to 
-     *                   view in the currently seelction connection.
+     * return a list of databases the current user is able to view in the currently seelction connection.
      *                   
-     * @return [array] [list of databases]
+     * @return array
      * 
      */
     public function showDatabases()
@@ -496,9 +475,9 @@ class Database
     }
 
     /**
-     * [showTables] - return the list of databases for the selected database.
+     * return the list of databases for the selected database.
      *                            
-     * @return [array] [list of tables]
+     * @return array
      * 
      */
     public function showTables()
