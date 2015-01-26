@@ -51,13 +51,12 @@ class Anvil
     }
 
     /**
-     * array_to_columns - convert an array to various arrays so the 
-     *                      values are in columns
+     * convert an array to various arrays so the values are in columns
      * 
      * @param  array   $aArray     [oringal array to sort]
      * @param  integer $nCols      [number of columns to return]
      * @param  string  $cDirection [vertical sorting vs horizontal sorting]
-     * @return array               [final array with values in new order.]
+     * @return array
      */
     public function arrayToColumns($aArray, $nCols = 2, $cDirection = 'vertical')
     {
@@ -172,9 +171,9 @@ class Anvil
     }
 
     /**
-     * [bytes - return filesize in human readable format]
+     * return filesize in human readable format]
      * @param  integer $size [number of filesize]
-     * @return string       [formatted string with approximate number of bytes]
+     * @return string
      */
     public static function bytes($size)
     {
@@ -189,9 +188,10 @@ class Anvil
     }
 
     /**
-     * [categoryTree description]
-     * @param  [type] $cTable [description]
-     * @return [type]         [description]
+     * build category tree from database table
+     * 
+     * @param  string $cTable [name of database table]
+     * @return array
      */
     public function categoryTree($cTable, $qualifier = '')
     {
@@ -291,7 +291,7 @@ class Anvil
      *     standard
      * 
      * 
-     * @return string the text of the requested verison to be returned.
+     * @return string
      */
     public function formatDate($date, $type = 'mdY')
     {
@@ -312,7 +312,8 @@ class Anvil
 
     /**
      * [csrf - create a random text string to use in csrf]
-     * @return string []
+     * @see  pi()
+     * @return string
      */
     public function csrf()
     {
@@ -321,9 +322,9 @@ class Anvil
 
 
     /**
-     * [convertLbtoKg - convert lbs to kilograms]
+     * convert lbs to kilograms]
      * @param  integer $pounds [number of pounds]
-     * @return integer         [number in kilograms]
+     * @return integer
      */
     public static function convertLbtoKg($pounds)
     {
@@ -332,11 +333,12 @@ class Anvil
 
 
     /**
-     * [curlPOST description]
-     * @param  [type] $cUrl     [description]
-     * @param  [type] $cFields  [description]
-     * @param  [type] &$cResult [description]
-     * @return [type]           [description]
+     * post data in fields to url
+     * 
+     * @param  string $cUrl     [URL to post]
+     * @param  mixed string|array $cFields  [array or string of values to post]
+     * @param  string &$cResult [string reference to pass back any errors]
+     * @return boolean 
      */
     public static function curlPOST($cUrl, $cFields, &$cResult)
     {
@@ -367,11 +369,20 @@ class Anvil
     }
 
     /**
-     * [dateDiff]
-     * @param  string  $nStart [description]
-     * @param  string  $nEnd   [description]
-     * @param  string  $sel    [description]
-     * @return integer         [description]
+     * return the difference between two dates and provide the count.
+     * 
+     * @param  string  $nStart [starting date]
+     * @param  string  $nEnd   [ending date]
+     * @param  string  $sel    [what kind of calculation to perform]
+     * 
+     *     Y - Years
+     *     W - Weeks
+     *     D - Days
+     *     H - Hours
+     *     M - Minutes
+     *     S - Seconds
+     * 
+     * @return integer         
      */
     public static function dateDiff($nStart, $nEnd, $sel = 'Y')
     {
@@ -438,32 +449,25 @@ class Anvil
     }
 
     /**
-     * [directoryToArray description]
-     * @param  [type]  $directory [description]
-     * @param  string  $extension [description]
-     * @param  boolean $full_path [description]
-     * @return [type]             [description]
+     * return an array of contents of a directory.
+     * 
+     * @param  string  $directory [path to directory]
+     * @param  string  $extension [limit look up to this file extension]
+     * @param  boolean $full_path [return full path information]
+     * @return array
      */
     public function directoryToArray($directory, $extension = '', $full_path = true)
     {
 
         $array_items = array();
-
         if ($handle = opendir($directory)) {
-
             while (false !== ($file = readdir($handle))) {
-
                 if ($file != '.' && $file != '..') {
-
                     if (is_dir($directory. '/' . $file)) {
-
                         $array_items = array_merge($array_items, directoryToArray($directory. '/' . $file, $extension, $full_path));
                     } else {
-
                         if (!$extension || (preg_match("/." . $extension . '/', $file))) {
-
                             if ($full_path) {
-
                                 $array_items[] = $directory . '/' . $file;
                             } else {
                                 $array_items[] = $file;
@@ -482,9 +486,10 @@ class Anvil
     }
 
     /**
-     * [isJSON] - determine if string is a JSON string
+     * determine if string is a JSON string
+     * 
      * @param  string  $string [string to be tested]
-     * @return boolean   true = yes / false = no
+     * @return boolean
      */
     public function isJSON($string)
     {
@@ -497,8 +502,7 @@ class Anvil
     }
 
     /**
-     * [showGlobals] - echo out all the global variables.
-     * @return none - echo's out all the global vars
+     * echo out all the global variables.     
      */
     public function showGlobals()
     {
@@ -520,9 +524,9 @@ class Anvil
     }
 
     /**
-     * [dumpVariable] - dump variable to HTML
+     * dump variable to HTML
      * @param  [various] $var [the variable to be dumped to the screen in HTML]
-     * @return string      [the returned screen.]
+     * @return string
      */
     public static function dumpVariable($var)
     {
@@ -533,10 +537,10 @@ class Anvil
 
 
     /**
-     * [encodeValue] - simple encoding method
+     * simple encoding method
      * @param  string $string [string to encode]
      * @param  string $key    [key for encoding]
-     * @return string         [returned string]
+     * @return string
      */
     public static function encodeValue($string, $key)
     {
@@ -561,11 +565,11 @@ class Anvil
     }
 
     /**
-     * [encryptString]         [one-way encryption of a string]
+     * one-way encryption of a string
      * @param  string $cString [the string to be encoded]
      * @param  string $cMethod [the method to use when encoding]
      * @param  string $cSalt   [the salt to use, if applicable.]
-     * @return string          [then encrypted string]
+     * @return string
      */
     public static function encryptString($cString, $cSalt = 'th3ra1ninsp@1ns@ysMainly1nth3pl#3n',  $cMethod = 'SHA512')
     {
@@ -598,9 +602,10 @@ class Anvil
 
     
     /**
-     * [extractDomainName]
+     * extract the domain name from a string
+     * 
      * @param  string $cString [a string containing a domain name]
-     * @return string          [the domain name found]
+     * @return string
      */
     public static function extractDomainName($cString)
     {
@@ -609,10 +614,10 @@ class Anvil
     }
 
     /**
-     * [formatPhoneNumber] - take raw string and format according to appropriate country code
+     * take raw string and format according to appropriate country code
      * @param  string $cString [string containing number]
      * @param  string $cType   [country to use as template]
-     * @return string          [final string]
+     * @return string
      */
     public static function formatPhoneNumber($cString, $cType = 'US')
     {
@@ -634,11 +639,10 @@ class Anvil
      *  you start hitting the 70+ range.
      * 
      * @param  string $cDOB string representing birthday]
-     * @return integer number of years between the two dates.
+     * @return integer
      */
     public static function getAge($cDOB)
     {
-
         if ($cDOB != null && ($cDOB != '0000-00-00' || $cDOB != '0000-00-00 00:00:00')) {
             $cDOB = strtolower(preg_replace("/[^0-9\/\-\.]/", '', trim(date('m/d/Y', strtotime($cDOB)))));
             if (strlen($cDOB) == 10 || strlen($cDOB) == 9 || strlen($cDOB) == 8) {
@@ -663,9 +667,9 @@ class Anvil
     }
 
     /**
-     * [getFileExtension] - extract the file extension from a path name.
+     * extract the file extension from a path name.
      * @param  string $name [The path name to be evaluated]
-     * @return string       [The file extension]
+     * @return string
      */
     public function getFileExtension($name)
     {
@@ -678,7 +682,8 @@ class Anvil
     }
 
     /**
-     * [getIpAddress] - get the IP address of incoming traffic
+     * return the IP address of incoming traffic
+     * 
      * @return string [The IP Address]
      */
     public static function getIpAddress()
@@ -703,9 +708,14 @@ class Anvil
     }
 
     /**
-     * [getTimeStamp description]
-     * @param  string $cFormat [description]
-     * @return [type]          [description]
+     * return a formatted timestamp
+     * 
+     * @param  string $cFormat [what format to use]
+     * 
+     * 
+     * 
+     * 
+     * @return string
      */
     public static function getTimeStamp($cFormat = 'MYSQL')
     {
@@ -754,15 +764,14 @@ class Anvil
     }
 
     /**
-     * [isStringHard - determine if string is hardend to requested level.]
+     * determine if string is hardend to requested level.]
      * @param  string  $cString       [string to be tested]
      * @param  integer $nLen          [the minimum length required for the string]
      * @param  boolean $lUpperCase    [require at least one uppercase character.]
      * @param  boolean $lSpecial      [require at least one special character.]
      * @param  boolean $nSpecialCnt   [the number greater than one, special characters required.]
-     *
      * 
-     * @return boolean           [true/false if tests fail.]
+     * @return boolean
      */
     public function isStringHard ($cString, $nLen = 8, $lUpperCase = false, $lSpecial = true, $nSpecialCnt = 1)
     {
@@ -794,11 +803,11 @@ class Anvil
     }
 
   /**
-   * [isValidEmailAddress - test for valid email address provided.]
+   * test for valid email address provided.
    * @param  string  $email     [string to be validated]
    * @param  boolean $lDNSCheck [if true, perform DNS check to ensure domain is valid.]
    * 
-   * @return boolean           [true/false if tests fail.]
+   * @return boolean
    */
     public function isValidEmailAddress($email, $lDNSCheck = false)
     {
@@ -880,11 +889,11 @@ class Anvil
     }
 
     /**
-     * [lpad] - pad the left side of a string with a character.
-     * @param  [integer] $length  [the total length of the string]
+     * pad the left side of a string with a character.
+     * @param  integer $length  [the total length of the string]
      * @param  string $string   [the string to pad]
      * @param  string $character  [the character to pad with]
-     * @return string           [the returned string]
+     * @return string
      */
     public static function lpad($length, $string, $character = ' ')
     {
@@ -896,9 +905,9 @@ class Anvil
     }
 
     /**
-     * [lwcase] - convert a string to lower-case letters
+     * convert a string to lower-case letters
      * @param  string $cString [the string to convert]
-     * @return string          [the converted string]
+     * @return string
      */
     public static function lwcase($cString)
     {
@@ -906,11 +915,11 @@ class Anvil
     }
 
     /**
-     * [mkdirs] - create the directory path if not present.
+     * create the directory path if not present.
      * @param  string  $dir       [directory path]
      * @param  integer $mode      [numeric representation of permissions]
      * @param  boolean $recursive [create directories recursively]
-     * @return [boolea]           [returns true/false on success]
+     * @return boolean
      */
     public static function mkdirs($dir, $mode = 0766, $recursive = true)
     {
@@ -929,9 +938,9 @@ class Anvil
     }
 
     /**
-     * [objectToArray] - convert an object to an array
+     * convert an object to an array
      * @param  [object] $obj [the incoming object]
-     * @return [array]       [the outgoing array]
+     * @return [array]
      */
     public function objectToArray($obj)
     {
@@ -939,12 +948,13 @@ class Anvil
     }
 
     /**
-     * [pagination description]
-     * @param  integer $record  [description]
-     * @param  integer $records [description]
-     * @param  integer $perpage [description]
-     * @param  integer $range   [description]
-     * @return [type]           [description]
+     * build an array that represents where pagination points would occur.
+     * 
+     * @param  integer $record  [the starting record number]
+     * @param  integer $records [the total number of records]
+     * @param  integer $perpage [number of records to be on each page.]
+     * @param  integer $range   [number of pages on left and right of selected page.]
+     * @return array
      */
     public function pagination($record = 0, $records = 0, $perpage = 24, $range = 2)
     {
@@ -1025,9 +1035,7 @@ class Anvil
     }
 
     /**
-     * [pi] the value of pi
-     * 
-     * @staticvar the number pi calculated out to 10,000 digits.
+     * the value of pi
      *      
      * @return integer pi returned to the required number of places.
      * 
@@ -1055,23 +1063,24 @@ class Anvil
     }
 
     /**
-     * [randomString description]
-     * @param  integer $length [description]
-     * @return [type]          [description]
+     * generate a random string
+     * 
+     * @param  integer $length [length of random string]
+     * @return string
      */
     public static function randomString($length = 32)
     {
         return substr(md5(rand(0, 9999) . uniqid('', 1)), 0, $length);
     }
-
  
     /**
-     * [redirect description]
-     * @param  [type] $value [description]
-     * @return [type]        [description]
+     * redirect the internet browser to URL.
+     * 
+     * @param  string $value [url to redirect to.]
      */
     public static function redirect($value)
     {
+        // because MS-Windows Sucks.
         if (strtoupper(substr(PHP_OS, 0, 3) == 'WIN')) {
             header("Refresh: 0; URL=$value");
         } else {
@@ -1082,10 +1091,10 @@ class Anvil
     }
 
     /**
-     * [recursiveRemoveDirectory description]
+     * remove a directory and all contents
      * @param  [type]  $directory [description]
      * @param  boolean $empty     [description]
-     * @return [type]             [description]
+     * @return boolean
      */
     public function recursiveRemoveDirectory($directory, $empty = false)
     {
@@ -1120,9 +1129,10 @@ class Anvil
     }
 
     /**
-     * [isHash description]
-     * @param  [type]  $var [description]
-     * @return boolean      [description]
+     * determine if variable is located in object
+     * 
+     * @param  mixed  $var [variable to be tested]
+     * @return boolean
      */
     public static function isHash($var)
     {
@@ -1130,9 +1140,10 @@ class Anvil
     }
 
     /**
-     * [replaceUTF8Chars description]
-     * @param  [type] $string [description]
-     * @return [type]         [description]
+     * replace UTF-8 characters for a safe string
+     * 
+     * @param  string $string [the string to be converted.]
+     * @return string
      */
     public function replaceUTF8Chars ($string)
     {
@@ -1178,15 +1189,14 @@ class Anvil
 
     
     /**
-     * [resizeImage] - this function uses the gdimage library to resize an image.
+     * this function uses the gdimage library to resize an image.
      * 
-     * @param  string  $cInput   - file path for the source image
-     * @param  string  $cOutput  - the output path.
-     * @param  integer $nH       [description]
-     * @param  integer $nW       [description]
-     * @param  string  $xType    [description]
-     * @param  integer $nQuality [description]
-     * @return - none
+     * @param  string  $cInput   [file path for the source image]
+     * @param  string  $cOutput  [the output path]
+     * @param  integer $nH       [the image height]
+     * @param  integer $nW       [the image width]
+     * @param  string  $xType    [alternate ways to crop image]
+     * @param  integer $nQuality [image quality]
      */
     public function resizeImage($cInput, $cOutput, $nH = 240, $nW = 320, $xType = 'normal', $nQuality = 100)
     {
@@ -1346,7 +1356,7 @@ class Anvil
      * 
      * @param  string  $directory [directory path]
      * @param  boolean $empty     [description]
-     * @return [type]             [description]
+     * @return boolean
      */
     public function rmDirectory($directory, $empty = false)
     {
@@ -1472,13 +1482,13 @@ class Anvil
 
     }
 
-    
     /**
-     * [slurp]
-     * @param  [type]  $f        [description]
-     * @param  array   $output   [description]
-     * @param  integer $lDynamic [description]
-     * @return [type]            [description]
+     * read file into string
+     * 
+     * @param  string  $f        [path to file]
+     * @param  array   $output   [array of values to replace]
+     * @param  integer $lDynamic [True - PHP executed on string]
+     * @return string
      */
     public function slurp($f, $output = array(), $lDynamic = 1)
     {
@@ -1547,9 +1557,9 @@ class Anvil
     }
 
     /**
-     * [stripWhiteSpace - remove extra white-space from string.]
+     * emove extra white-space from string
      * @param  string $cStr [string to be modified]
-     * @return string string with white space removed.
+     * @return string
      */
     public static function stripWhiteSpace($cStr)
     {
@@ -1561,7 +1571,7 @@ class Anvil
      * 
      * @param  string  $cString [string to extract substring]
      * @param  integer $nLen    [number of words to be extracted]
-     * @return string  string with complete number of words, it will append ... if over the limit
+     * @return string 
      */
     public static function substrWord($cString, $nLen = 250)
     {
@@ -1595,9 +1605,9 @@ class Anvil
     }
 
     /**
-     * [ucase] : convert string to uppercase.
+     * convert string to uppercase.
      * @param  string $cString
-     * @return string string in all uppercase
+     * @return string
      */
     public static function ucase($cString)
     {
@@ -1626,9 +1636,7 @@ class Anvil
 
 
     /**
-     * 
-     * @param  string $cDate []
-     * @return [type]        [description]
+     * @ignore     
      */
     public static function userTime($cDate)
     {
@@ -1640,14 +1648,15 @@ class Anvil
     }
 
     /**
-     * [validateCreditCard - test if provided card number is valid.]
+     * validate credit card number against valid card methods.
+     * 
      * @param  string $cardnumber [string to be tested]
      * 
      *     Test Card Number: 4007000000027
      * 
      * @param  string $cardname   [string identifying card type to be tested]
      * @param  string $error      [error code if error detected and passed by reference]
-     * @return  boolean           [true/false for valid card number]
+     * @return  boolean
      */
     public function validateCreditCard ($cardnumber, $cardname, &$error)
     {
@@ -1958,10 +1967,7 @@ class Anvil
     }
 
     /**
-     * [xmlDataDump description]
-     * @param  [type] $aArray  [description]
-     * @param  [type] $cOutput [description]
-     * @return [type] [description]
+     * @ignore     
      */
     public function xmlDataDump($aArray, &$cOutput)
     {
