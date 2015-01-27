@@ -864,7 +864,7 @@ class Anvil
     }
 
     /**
-     * [isRobot description]
+     * [isRobot]
      * @param  [type]  $cAgent  [description]
      * @param  [type]  $cRobots [description]
      * @return boolean          [description]

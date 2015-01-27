@@ -1,13 +1,13 @@
 <?php
 
-namespace foonster\forge\other\Authorizenet;
+namespace foonster\forge\paymentgateways\Authorizenet;
 /**
  * This class is based on the AIM Developer Guide using Authorize.Net’s 
  * Advanced Integration Method API
  * 
  */
 
-class Aim
+class Payflowpro
 {
     /**
      * @var string URL associated with the Authorize.net gateway
@@ -43,42 +43,6 @@ class Aim
     }
 
     /**
-     * [authCapture description]
-     * @return [type] [description]
-     */
-    public function authCapture()
-    {
-
-    }
-
-    /**
-     * [authOnly description]
-     * @return [type] [description]
-     */
-    public function authOnly()
-    {
-
-    }
-
-    /**
-     * [captureOnly description]
-     * 
-     * @return [type] [description]
-     */
-    public function captureOnly()
-    {
-
-    }
-    
-    /**
-     * issue credit
-     */ 
-    public function credit() 
-    {
-
-    }    
-
-    /**
      * return the URL associated with the currently selected gateway
      * 
      * @return string
@@ -86,51 +50,7 @@ class Aim
     public function gateway()
     {
         return $this->gateway;
-    }
-
-    /**
-     * post transaction to AuthorizeNet server]
-     */
-    public function httpPost()
-    {
-
-        $ch = curl_init($this->gateway); // URL of gateway for cURL to post to
-        @ curl_setopt($ch, CURLOPT_HEADER, 0); // set to 0 to eliminate header info from response    
-        @ curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); // Returns response data instead of TRUE(1)
-        @ curl_setopt($ch, CURLOPT_POSTFIELDS, rtrim( $this->postString, "& " )); // use HTTP POST to send form data
-        
-        if (strtoupper(substr(PHP_OS,0,3)=='WIN')) {
-            @ curl_setopt($ch, CURLOPT_CAINFO, 'C:\WINNT\curl-ca-bundle.crt');   
-        }
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYHOST, 0);     
-        curl_setopt ($ch, CURLOPT_SSL_VERIFYPEER, 0);
-   
-        $response = curl_exec($ch); //execute post and get results
-        
-        if (empty($response)) {
-       
-            // some kind of an error happened
-      
-            $cError = curl_error($ch);      
-            $aReturn['authorized'] = 0;        
-            $aReturn['authcode'] = substr( $aResponse[3] , 9 );    
-            $aReturn['response_code'] = 'CC Processing Error ['.substr( $aResponse[0] , 7 ).'] '.substr( $aResponse[2] , 8 );
-        
-            return $aReturn;
-        
-        } else {
-      
-            $aResponse = explode('|',$mResponse);      
-            $info = curl_getinfo($ch);      
-            curl_close($ch); // close cURL handler
-
-            if (empty($info['http_code'])) {         
-                die("No HTTP code was returned").'<br>';
-            } 
-    
-        } 
-        curl_close($ch); // close cURL handler 
-    }    
+    }  
 
     /**
      * [priorAuthCapture description]
@@ -183,32 +103,6 @@ class Aim
             $this->gateway = 'https://test.authorize.net/gateway/transact.dll';
         } else {
             $this->gateway = 'https://secure.authorize.net/gateway/transact.dll';
-        }
-        return $this;
-    }
-
-    /**
-     * the variable array used to construct the POST string
-     * 
-     * @param mixed $var [string or array to be added t]
-     * @param string $value [string or ignored]
-     * @return Aim
-     */
-    public static function setVar($var = '', $value = '')
-    {
-
-        (is_object($var)) ? $var = (array) $var : false;
-
-        if (is_array($var)) { 
-            foreach ($var as $n => $v) {
-                if (is_array($v)) {                 
-                    $this->setVar($v);
-                } else {
-                    $this->vars[$var] = $value;                
-                }
-            }
-        } else {
-            $this->vars[$var] = $value;
         }
         return $this;
     }
