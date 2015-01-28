@@ -57,6 +57,61 @@ class Database
         
     }
 
+
+
+
+    /**
+    * [updaterecord description]
+    * @param  [type] $table     [description]
+    * @param  array  $variables [description]
+    * @param  [type] $error     [description]
+    * @return [type]            [description]
+    */
+    public function sqlUpdateRecord($table, $variables)
+    {
+     
+        is_object($variables) ? $variables = (array) $variables : false;
+
+        $sql = $this->sqlBuildQuery($table, 'update', $variables);
+        $fields = $this->sqlSetVars($sql, $variables);
+        $sth = $this->sqlRunQuery($sql, $fields);
+        $err = $sth->errorInfo();
+
+        if ($err[1] > 0) {
+            $this->error = $err[2];
+            return 0;
+        } else {
+            if ($err[1] == 0) {
+                return 1;
+            } else {
+                return $sth->rowCount();
+            }
+        }
+    }
+
+    public function sqlAddRecord($table, $variables)
+    {
+    
+        is_object($variables) ? $variables = (array) $variables : false;
+
+        $sql = $this->sqlBuildQuery($table, 'insert', $variables);
+        $fields = $this->sqlSetVars($sql, $variables);
+        $sth = $this->sqlRunQuery($sql, $fields);
+
+        $err = $sth->errorInfo();
+        if ($err[1] > 0) {
+            $this->error = $err[2];
+            return 0;
+        } else {
+            return $this->sqlInsertId();
+        }
+    }
+
+
+
+
+
+
     /**
      * build a PDO query string
      * 

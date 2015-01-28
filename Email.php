@@ -137,7 +137,7 @@ class Email
         $this->checkDns($lDNSCheck);
     }
     /**
-     *  class destructor 
+     *  @ingore
      */
     public function __destruct()
     {
@@ -146,25 +146,16 @@ class Email
     }
 
     /**
-    * overload of __set
-    * 
-    * @param string $index
-    * @param mixed $value
-    *
-    */
+     *  @ingore
+     */
     public function __set($index, $value)
     {
         $this->vars[ $index ] = $value;
     }
+
     /**
-    *
-    * overload of __get
-    *
-    * @param string $index object value to return
-    *
-    * @return mixed
-    *
-    */
+     *  @ingore
+     */
     public function __get($index)
     {
         return $this->vars[ $index ];
@@ -193,11 +184,7 @@ class Email
      * 
      * @param  string $cEmail  the email address or string of email addresses to 
      * be added.
-     * 
-     * @author Nicolas Colbert
-     * @company Foonster Technology
-     * @created 03/13/2004
-     * @modified 07/22/2006
+     * @return Email
     */
     public function addBlindCopyRecipient($cEmail = null)
     {
@@ -239,20 +226,9 @@ class Email
         return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: checkDns
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS: NONE
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * set the check DNS variable.
+     */ 
     public function checkDns ( $lCheck = false )
     {
 
@@ -260,20 +236,9 @@ class Email
 
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: checkVar
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE : To replace any restricted characters from various header fields.
-    //        RETURNS: none - value modified by reference
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * To replace any restricted characters from various header fields.
+     */
     public function checkVar ( &$cVariable )
     {
 
@@ -285,12 +250,10 @@ class Email
 
     }
 
-    /*
-    *
-    *
-    *
+    /**
+     * 
+    * @ignore
     */
-
     public function csrfguard_generate_token($unique_form_name)
     {
 
@@ -315,13 +278,10 @@ class Email
 
     }
 
-    /*
-    *
-    *
-    *
+    /**
+    * @ignore
     */
-
-    public function csrfguard_validate_token($unique_form_name,$token_value)
+   public function csrfguard_validate_token($unique_form_name,$token_value)
     {
         $token = $this->get_from_session($unique_form_name);
         if ($token===false) {
@@ -337,12 +297,9 @@ class Email
         return $result;
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function csrfguard_replace_forms($form_data_html)
     {
 
@@ -362,12 +319,9 @@ class Email
         return $form_data_html;
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function store_in_session($key,$value)
     {
         if (isset($_SESSION)) {
@@ -375,24 +329,18 @@ class Email
         }
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function unset_session($key)
     {
         $_SESSION[$key]=' ';
         unset($_SESSION[$key]);
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function get_from_session($key)
     {
 
@@ -401,12 +349,9 @@ class Email
         } else {  return false; } //no session data, no CSRF risk
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function csrfguard_inject()
     {
         $data = ob_get_clean();
@@ -414,12 +359,9 @@ class Email
         echo $data;
     }
 
-    /*
-    *
-    *
-    *
-    */
-
+    /**
+     * 
+     */ 
     public function csrfguard_start()
     {
         if (count($_POST)) {
@@ -440,10 +382,10 @@ class Email
     }
 
     /**
-     * [from description]
-     * @param  [type] $cEmail [description]
-     * @param  [type] $cName  [description]
-     * @return [type]         [description]
+     * set the from address
+     * @param  string $cEmail [the valid email address example@mail.com]
+     * @param  string $cName  [the proper name to be associated, if needed]
+     * @return Email
      */
     public function from( $cEmail = null , $cName = null )
     {
@@ -453,9 +395,10 @@ class Email
     }
 
     /**
-     * [isAddressValid description]
-     * @param  [type]  $email [description]
-     * @return boolean        [description]
+     * test if email address follows valid form
+     * 
+     * @param  string  $email
+     * @return boolean
      */
     public function isAddressValid( $email = null )
     {
@@ -501,10 +444,8 @@ class Email
             }
 
             if ($this->_lCheckDns) {
-
                 if ( checkdnsrr( $email_array[1] ) ) {
                     return true;
-
                 } else {
                     return false;
 
@@ -519,21 +460,17 @@ class Email
 
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: message
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS: true || false
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
-    public function message( $cValue = NULL , $cType = 'TEXT' , $cChar = NULL , $cContent = NULL )
+    /**
+     * set the message 
+     * 
+     * @param $cValue $cValue 
+     * @param $cType [TEXT|HTML - determine if content will be set to HTML or plain-text]
+     * @param $cChar [change character set for message] 
+     * @param $cContent $cValue 
+     * 
+     * @return Email
+     */ 
+    public function message($cValue = NULL, $cType = 'TEXT', $cChar = NULL, $cContent = NULL)
     {
 
         if ($cContent != NULL) {
@@ -568,45 +505,21 @@ class Email
         return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: priority
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE : 1 (for highest priority), 3 (normal) and 5 (lowest).
-    //       PURPOSE : To set the priority of the message
-    //        RETURNS: none
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
-    public function priority( $nValue = 3 )
+    /**
+     * To set the priority of the message
+     * 
+     * @param integer $nValue [1 (for highest priority), 3 (normal) and 5 (lowest).]
+     */ 
+    public function priority($nValue = 3)
     {
-
-        if ( is_numeric( $nValue ) && $nValue >= 1 && $nValue <= 5 ) {
-
+        if (is_numeric($nValue) && $nValue >= 1 && $nValue <= 5) {
             $this->_priority = $nValue;
-
         }
-
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: quoted_printable_encode
-    //   DATE CREATED: tzangerl [dot] pdc {dot} kth dot se 09-Apr-2010 02:05
-    //  DATE MODIFIED:
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS:
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * 
+     */ 
     public function quoted_printable_encode( $input = null , $line_max = 75 )
     {
 
@@ -725,20 +638,9 @@ class Email
 
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: reset
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS: true || false
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * reset all variables.
+     */ 
     public function reset()
     {
 
@@ -790,20 +692,14 @@ class Email
     *   REMOVE_DOUBLESPACE - Remove double space and replace with single spaces.
     *   BASIC - Only characters found on the keyboard no special characters.
     *
-    *   @return string - the string after all invalid characters have been
-    *   removed.
+    *   @param string $cWordFile [csv string for words that should be considered restricted]
+    * 
+    *   @return string
     *
-    *   @access     public
-    *   @author     N.Colbert of Foonster Technology
-    *   @copyright  Foonster Technology 2004
-    *   @version    1.0
-    *   @created    09/28/2004
-    *   @modified   02/17/2013
     */
 
     public function scrubVar( $value , $cType = 'BASIC' , $cWordFile = '' )
     {
-
         $cType = strtoupper( trim( $cType ) );
 
         if ($cType == 'ALPHA') {
@@ -878,21 +774,12 @@ class Email
         }
 
     }
-
-    // =============================================================================
-    // =============================================================================
-    //           NAME: send
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS: true || false
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    
+    /**
+    * @created 03/13/2004
+    * @modified 07/22/2006
+    * @return boolean
+    */
     public function send()
     {
 
@@ -901,15 +788,10 @@ class Email
         // set end of line marker
 
         if ( strtoupper( substr( PHP_OS , 0 , 3 ) == 'WIN' ) ) {
-
             $eol = "\r\n";
-
         } elseif ( strtoupper( substr( PHP_OS , 0 , 3 ) == 'MAC' ) ) {
-
             $eol = "\r";
-
         } else {
-
             $eol = "\n";
         }
 
@@ -918,15 +800,11 @@ class Email
         $headers .= 'From: ' . $this->_fromname . ' <' . $this->_from . '>' . $eol;
 
         if ( sizeof ( $this->_cc ) > 0 ) {
-
             $headers .= 'Cc: '. implode( ' ,' , $this->_cc ) . $eol;
-
         }
 
         if ( sizeof ( $this->_bcc ) > 0 ) {
-
             $headers .= 'Bcc: '. implode( ' ,' , $this->_bcc ) . $eol;
-
         }
 
         $headers .= 'Reply-To: ' . $this->_fromname . ' <' . $this->_from . '>' . $eol;
@@ -1158,6 +1036,8 @@ class Email
 
     }
 
+
+
     // =============================================================================
     // =============================================================================
     //           NAME: sender
@@ -1178,62 +1058,29 @@ class Email
         return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: setCharacterSet
-    //   DATE CREATED:
-    //  DATE MODIFIED:
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS:
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
-    public function setCharacterSet( $cValue , $cType = 'TEXT' )
+    /**
+     * set the character set variable for the message
+     */ 
+    public function setCharacterSet($cValue, $cType = 'TEXT')
     {
-
-        if ( strtoupper( trim( $cType ) ) == 'HTML' ) {
-
-            $this->_html_charset = strtolower( trim( $cValue ) );
-
+        if (strtoupper(trim($cType)) == 'HTML') {
+            $this->_html_charset = strtolower(trim($cValue));
         } else {
-
-            $this->_text_charset = strtolower( trim( $cValue ) );
-
+            $this->_text_charset = strtolower(trim($cValue));
         }
 
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: setContentType
-    //   DATE CREATED:
-    //  DATE MODIFIED:
-    //         USAGE :
-    //       PURPOSE :
-    //        RETURNS:
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
-    public function setContentType( $cValue , $cType = 'TEXT' )
+    /**
+     * set the content type variable for the message
+     */ 
+    public function setContentType($cValue, $cType = 'TEXT')
     {
-
         if ( strtoupper( trim( $cType ) ) == 'HTML' ) {
-
             $this->_html_content_transfer_encoding = strtolower( trim( $cValue ) );
-
         } else {
-
             $this->_text_content_transfer_encoding = strtolower( trim( $cValue ) );
-
         }
-
     }
 
     // =============================================================================
@@ -1334,9 +1181,7 @@ class Email
     }
 
     /**
-     * [stopText description]
-     * @param  [type] $cStr [description]
-     * @return [type]       [description]
+     * @ignore
      */
     public function stopText($cStr)
     {
@@ -1351,41 +1196,22 @@ class Email
 
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: subject
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE : set the subject of the email message
-    //        RETURNS: none
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * set the subject of the message
+     * 
+     * @return Email 
+     */ 
     public function subject($cValue = null)
     {
         $this->_subject = $cValue;
         return $this;
     }
 
-    // =============================================================================
-    // =============================================================================
-    //           NAME: to
-    //   DATE CREATED: 03/13/2004
-    //  DATE MODIFIED: 07/22/2006
-    //         USAGE :
-    //       PURPOSE : set the to field of the email message - only one email
-    //                 address allowed.
-    //        RETURNS: none
-    //      COMMENTS :
-    //
-    //
-    // =============================================================================
-    // =============================================================================
-
+    /**
+     * set the to field of the email message - only one email address allowed.
+     * 
+     * @return Email
+    */
     public function to($cEmail = null)
     {
         $this->isAddressValid($cEmail) ? $this->_to = $cEmail : $this->_to = '';

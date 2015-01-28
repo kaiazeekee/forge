@@ -65,16 +65,16 @@ class Html
     private $_value = '';
 
     /**
-     * class constructor
-     */
+     * @ignore
+     */ 
     public function __construct()
     {
 
     }
 
     /**
-     * class destructor
-     */
+     * @ignore
+     */ 
     public function __destruct()
     {
         

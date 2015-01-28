@@ -19,7 +19,7 @@ class Anvil
     private $_dbh; // the database handle.
 
     /**
-     * 
+     * @ignore
      */
     public function __construct()
     {
@@ -27,7 +27,7 @@ class Anvil
     }
 
     /**
-     * 
+     * @ignore
      */
     public function __destruct()
     {
@@ -35,16 +35,16 @@ class Anvil
     }
 
     /**
-     * 
-    */
+     * @ignore
+     */
     public function __set($index, $value)
     {
         $this->_vars[$index] = $value;
     }
     
     /**
-    *
-    */
+     * @ignore
+     */
     public function __get($index)
     {
         return $this->_vars[$index];
@@ -56,6 +56,7 @@ class Anvil
      * @param  array   $aArray     [oringal array to sort]
      * @param  integer $nCols      [number of columns to return]
      * @param  string  $cDirection [vertical sorting vs horizontal sorting]
+     * 
      * @return array
      */
     public function arrayToColumns($aArray, $nCols = 2, $cDirection = 'vertical')
@@ -113,9 +114,9 @@ class Anvil
 
   
     /**
-     * [benchMark]
-     * @param  string $cType [description]
-     * @return [type]        [description]
+     * add benchmark point - this function can be used to 
+     * measure execution time.
+     * @param  string $cType [notation to tell time to this part of the execution]     
      */
     public function benchMark($marker = null)
     {
@@ -131,8 +132,9 @@ class Anvil
 
 
     /**
-     * [benchMarkElapsedTime]
-     * @return integer [number of seconds]
+     * array of benchmark points and the time to this part of the execution
+     * 
+     * @return array
      */
     public function benchMarkElapsedTime()
     {
@@ -162,8 +164,7 @@ class Anvil
 
 
     /**
-     * [benchMarkReset - reset the benchmark options]
-     * @return none
+     * reset the benchmarks
      */
     public function benchMarkReset()
     {
@@ -222,13 +223,14 @@ class Anvil
     }
 
     /**
-     * [categoryDirectory description]
-     * @param  [type] $aCategories [description]
-     * @param  [type] $cCat        [description]
-     * @param  string $cType       [description]
-     * @return [type]              [description]
+     * build category directory based on Foonster Technology assumptions on parnt_id
+     * 
+     * @param  array $aCategories [array to build category list from]
+     * @param  string $cCat        [name of current category]
+     *      
+     * @return string json encoded string 
      */
-    public function categoryDirectory( $aCategories , $cCat , $cType = 'name' )
+    public function categoryDirectory($aCategories, $cCat)
     {
 
         $aReturn = array();     
@@ -254,10 +256,12 @@ class Anvil
     }
 
     /**
-     * [categoryTitle description]
-     * @param  [type] $aCategories [description]
-     * @param  [type] $cCat        [description]
-     * @return [type]              [description]
+     * build category directory based on Foonster Technology assumptions on parnt_id
+     * 
+     * @param  array $aCategories [array to build category list from]
+     * @param  string $cCat        [name of current category]
+     *      
+     * @return string json encoded string 
      */
     public function categoryTitle( $aCategories , $cCat )
     {
@@ -279,7 +283,7 @@ class Anvil
     }
 
     /**
-     * [formatDate - class to format dates in predefined methods of display]
+     * format dates in predefined methods of display
      * 
      * @param  string $date [date string to be converted]
      * @param  string $type what type of string to be returned.
@@ -287,8 +291,8 @@ class Anvil
      *     expanded
      *     fancy
      *     fancywithhours
-     *     europe
-     *     standard
+     *     europe: d/m/Y
+     *     standard(default): m/d/Y
      * 
      * 
      * @return string
@@ -311,7 +315,7 @@ class Anvil
 
 
     /**
-     * [csrf - create a random text string to use in csrf]
+     * create a random text string
      * @see  pi()
      * @return string
      */
@@ -323,7 +327,9 @@ class Anvil
 
     /**
      * convert lbs to kilograms]
+     * 
      * @param  integer $pounds [number of pounds]
+     * 
      * @return integer
      */
     public static function convertLbtoKg($pounds)
@@ -426,10 +432,11 @@ class Anvil
     }
 
     /**
-     * [decodeValue description]
-     * @param  [type] $string [description]
-     * @param  [type] $key    [description]
-     * @return [type]         [description]
+     * decode string based on simple ordinal encryption
+     * 
+     * @param  string $string [string to encode]
+     * @param  string $key    [string to use as key/salt]
+     * @return string
      */
     public function decodeValue($string, $key)
     {
@@ -555,9 +562,11 @@ class Anvil
     }
 
     /**
-     * [encodeXMLString]
+     * encode XML string with proper html elments
+     * 
      * @param  string $string [valid XML string to be encoded]
-     * @return string         [HTML encoded string]
+     * 
+     * @return string
      */
     public static function encodeXMLString(&$string)
     {
@@ -750,9 +759,10 @@ class Anvil
     }
 
     /**
-     * [isRecord description]
-     * @param  [type]  $nRecord [description]
-     * @return boolean          [description]
+     * ensure variable is a numeric integer
+     * 
+     * @param  string  $nRecord [string to be verified]
+     * @return boolean
      */
     public static function isRecord($nRecord = null)
     {
@@ -864,12 +874,13 @@ class Anvil
     }
 
     /**
-     * [isRobot]
-     * @param  [type]  $cAgent  [description]
-     * @param  [type]  $cRobots [description]
-     * @return boolean          [description]
+     * test if string matches Foonster Technology identified as a robot
+     * 
+     * @param  string  $cAgent  [represents agent string to compare]
+     * 
+     * @return boolean
      */
-    public static function isRobot ($cAgent = null, $cRobots = null)
+    public static function isRobot ($cAgent = null)
     {
         $cRobots = array(
             'ABCdatos\sBotLink',            
@@ -939,8 +950,8 @@ class Anvil
 
     /**
      * convert an object to an array
-     * @param  [object] $obj [the incoming object]
-     * @return [array]
+     * @param  object $obj [the object to be converted]
+     * @return array
      */
     public function objectToArray($obj)
     {
@@ -954,7 +965,9 @@ class Anvil
      * @param  integer $records [the total number of records]
      * @param  integer $perpage [number of records to be on each page.]
      * @param  integer $range   [number of pages on left and right of selected page.]
+     * 
      * @return array
+     * 
      */
     public function pagination($record = 0, $records = 0, $perpage = 24, $range = 2)
     {
@@ -1035,9 +1048,9 @@ class Anvil
     }
 
     /**
-     * the value of pi
-     *      
-     * @return integer pi returned to the required number of places.
+     * the value of pi to the requested length.
+     * 
+     * @return integer
      * 
      */
     public static function pi($length = 24)
@@ -1050,7 +1063,7 @@ class Anvil
      * convert a string to proper case.
      * 
      * @param  string $cString [the string to be modified]
-     * @return string          the modified string
+     * @return string
      */
     public static function properCase($cString)
     {
@@ -1517,11 +1530,13 @@ class Anvil
     }
 
     /**
-     * [splitString description]
-     * @param  [type] $cString [description]
-     * @return [type]          [description]
+     * split a string into the an array with each row as a substring to a specific length.
+     * 
+     * @param  string $cString [string to split]
+     * @param  integer $nLen [length of individual string, default = 72]
+     * @return array
      */
-    public function splitString($cString)
+    public function splitString($cString, $nLen = 72)
     {
         $cString = preg_replace("/([\r\n])([\r\n])[\s]+/si", '', $cString); // remove line breaks replace with paragraph
         $aArray = preg_split("/\s+/", $cString);

@@ -18,8 +18,9 @@ class Calendar extends \DateTime
     public $error;
 
     /**
-     * [__construct description]
-     * @param [type] $year [description]
+     * class constructor
+     * 
+     * @param integer $year [what year to load]
      */
     public function __construct($year = null)
     {                
@@ -30,7 +31,7 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [__destruct description]
+     * @ignore
      */
     public function __destruct()
     {
@@ -39,9 +40,7 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [__get description]
-     * @param  [type] $index [description]
-     * @return [type]        [description]
+     * @ignore
      */
     public function __get($index)
     {
@@ -49,9 +48,7 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [__set description]
-     * @param [type] $index [description]
-     * @param [type] $value [description]
+     * @ignore
      */
     public function __set($index, $value)
     {
@@ -59,12 +56,12 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [fillByWeek] - build an asosociative array containing the days and weeks.
-     *                additionally, this does NOT use ISO 8601 to make the weeks.
+     * build an asosociative array containing the days and weeks. 
+     * additionally, this does NOT use ISO 8601 to make the weeks.
      * 
      * @param  integer $month [number representing the month]
      * @param  integer $year  [number representing the year]
-     * @return array        [description]
+     * @return array
      */
     public function fillByWeek($month, $year) 
     {
@@ -119,10 +116,11 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [fillDays description]
-     * @param  [type] $month [description]
-     * @param  [type] $year  [description]
-     * @return [type]        [description]
+     * fill array with what would appear on a calendar page.
+     * 
+     * @param  integer $month [month]
+     * @param  integer $year  [year]
+     * @return array
      */
     public function fillDays($month, $year) 
     {
@@ -140,8 +138,7 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [loadCalendar]
-     * @return [type] [description]
+     * @ignore
      */
     public function loadCalendar()
     {
@@ -152,10 +149,12 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [getMonth description]
-     * @param  [type] $month [description]
-     * @param  [type] $year  [description]
-     * @return [type]        [description]
+     * generate general information about requested month.
+     * 
+     * @param  integer $month [month]
+     * @param  integer $year  [year]
+     * @param  boolean $parent [true, will build information about next/previous months as well]
+     * @return object
      */
     public function getMonth($month = null, $year = null, $parent = true) 
     {
@@ -179,8 +178,12 @@ class Calendar extends \DateTime
     }
 
     /**
-     * [setYear description]
-     * @param [type] $year [description]
+     * change the year assgined to the class, there is no return value but the method
+     * will run the loadCalendar function.
+     * 
+     * @see loadCalendar()
+     * 
+     * @param integer $year [year]     
      */
     public function setYear($year)
     {
