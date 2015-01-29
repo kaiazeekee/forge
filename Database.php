@@ -310,9 +310,9 @@ class Database
     {    
         is_object($variables) ? $variables = (array) $variables : false;
 
-        $sql = $this->sqlBuildQuery($table, 'insert', $variables);
-        $fields = $this->sqlSetVars($sql, $variables);
-        $sth = $this->sqlRunQuery($sql, $fields);
+        $sql = $this->buildQuery($table, 'insert', $variables);
+        $fields = $this->setVariables($sql, $variables);
+        $sth = $this->runQuery($sql, $fields);
 
         $err = $sth->errorInfo();
         if ($err[1] > 0) {
@@ -529,9 +529,9 @@ class Database
      
         is_object($variables) ? $variables = (array) $variables : false;
 
-        $sql = $this->sqlBuildQuery($table, 'update', $variables);
-        $fields = $this->sqlSetVars($sql, $variables);
-        $sth = $this->sqlRunQuery($sql, $fields);
+        $sql = $this->buildQuery($table, 'update', $variables);
+        $fields = $this->setVariables($sql, $variables);
+        $sth = $this->runQuery($sql, $fields);
         $err = $sth->errorInfo();
 
         if ($err[1] > 0) {
