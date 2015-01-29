@@ -312,8 +312,7 @@ class Database
 
         $sql = $this->buildQuery($table, 'insert', $variables);
         $fields = $this->setVariables($sql, $variables);
-        $sth = $this->runQuery($sql, $fields);
-
+        $sth = $this->runQuery($sql, $fields->vars);
         $err = $sth->errorInfo();
         if ($err[1] > 0) {
             $this->error = $err[2];
@@ -324,11 +323,7 @@ class Database
     }
 
     /**
-     * 
-     * [isError]
-     * 
-     * @return boolean 
-     * 
+     *  @ignore
      */
     public function isError()
     {
@@ -358,7 +353,7 @@ class Database
     public function runQuery($sql, $params = array())
     {
 
-        $queryType = substr(trim($sql), 0, strpos($sql, " "));
+        $queryType = substr(trim($sql), 0, strpos($sql, ' '));
 
         // ensure that only 
         $matches = array();
@@ -527,11 +522,10 @@ class Database
     public function update($table, $variables)
     {
      
-        is_object($variables) ? $variables = (array) $variables : false;
-
+        is_object($variables) ? $variables = (array) $variables : false;    
         $sql = $this->buildQuery($table, 'update', $variables);
         $fields = $this->setVariables($sql, $variables);
-        $sth = $this->runQuery($sql, $fields);
+        $sth = $this->runQuery($sql, $fields->vars);
         $err = $sth->errorInfo();
 
         if ($err[1] > 0) {
