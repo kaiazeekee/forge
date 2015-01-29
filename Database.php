@@ -344,7 +344,7 @@ class Database
      */
     public function insertId()
     {
-        return $this->dbh->insertId();
+        return $this->dbh->lastInsertId();
     }
 
     /**
