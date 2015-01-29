@@ -172,6 +172,19 @@ class Anvil
     }
 
     /**
+     * 
+     * this will bind the variables to the provided element.
+     * 
+     */ 
+    public function bind(&$element, $variables)
+    {
+        is_object($variables) ? $variables = (array) $variables : false;
+        foreach($variables as $k => $v) {
+            $element->{$k} = $v;
+        }        
+    }
+
+    /**
      * return filesize in human readable format]
      * @param  integer $size [number of filesize]
      * @return string
