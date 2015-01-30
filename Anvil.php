@@ -471,7 +471,7 @@ class Anvil
             while (false !== ($file = readdir($handle))) {
                 if ($file != '.' && $file != '..') {
                     if (is_dir($directory. '/' . $file)) {
-                        $array_items = array_merge($array_items, directoryToArray($directory. '/' . $file, $extension, $full_path));
+                        $array_items = array_merge($array_items, $this->directoryToArray($directory. '/' . $file, $extension, $full_path));
                     } else {
                         if (!$extension || (preg_match("/." . $extension . '/', $file))) {
                             if ($full_path) {
