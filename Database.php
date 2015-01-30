@@ -342,6 +342,22 @@ class Database
         return $this->dbh->lastInsertId();
     }
 
+
+    /**
+     * 
+     * 
+     */ 
+    public function persist($table, $object)
+    {
+        if ($this->id > 0) {
+            // this is an update
+            $this->dbh->update($table, $object);            
+        } else {
+            // this is an addition
+            $this->dbh->insert($table, $object);            
+        }
+    }    
+
     /**
      * 
      * 

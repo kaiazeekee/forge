@@ -12,11 +12,7 @@ class Anvil
 {
     public $error;
     private $_vars = array();
-    private $_benchmarks = array();
-    private $_tag;
-    private $_options = array();
-    private $_attributes = array();
-    private $_dbh; // the database handle.
+    private $_benchmarks = array();    
 
     /**
      * @ignore
@@ -99,16 +95,20 @@ class Anvil
     } 
     
     /**
-     * attributeExists - determine if attribute is currently assigned to this object.
+     * determine if attribute is currently assigned to this object.
      * 
      * @param  string $cAttribute [name of attribute to be located.]
      * 
-     * @return boolean [Returns TRUE on success or FALSE on failure.]
+     * @return boolean
      * 
      */
-    public static function attributeExists($cAttribute)
+    public static function attributeExists($attribute, $object = null)
     {
-        $oObject = get_object_vars($this);
+        if (!is_null($object)) { 
+            $obj = get_object_vars($object);
+        } else {
+            $obj = get_object_vars($this);
+        }
         return array_key_exists($attribute, $object_vars);
     }
 
@@ -169,19 +169,6 @@ class Anvil
     public function benchMarkReset()
     {
         $_benchmarks = array();
-    }
-
-    /**
-     * 
-     * this will bind the variables to the provided element.
-     * 
-     */ 
-    public function bind(&$element, $variables)
-    {
-        is_object($variables) ? $variables = (array) $variables : false;
-        foreach($variables as $k => $v) {
-            $element->{$k} = $v;
-        }        
     }
 
     /**
