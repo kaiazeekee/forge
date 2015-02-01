@@ -476,6 +476,7 @@ class Database
      * @param array  $params [array used to populate variables for query]
      * 
      * @return Database
+     * @todo  add checks to ensure data follows database structure requirements.
      * 
      */
     public function setVariables($sql, $params = array())

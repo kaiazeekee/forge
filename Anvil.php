@@ -171,6 +171,18 @@ class Anvil
         $_benchmarks = array();
     }
 
+
+    /**
+     * bind a variable array to an object
+     */ 
+    public function bind($variables, $obj)
+    {
+        is_object($variables) ? $variables = (array) $variables : false;
+        foreach($variables as $k => $v) {
+            $obj->{$k} = $v;
+        }  
+    }
+
     /**
      * return filesize in human readable format]
      * @param  integer $size [number of filesize]
@@ -506,28 +518,6 @@ class Anvil
         } else {
             return 0;
         }
-    }
-
-    /**
-     * echo out all the global variables.     
-     */
-    public function showGlobals()
-    {
-        echo '<hr /><strong>SESSION</strong><hr />';
-        self::dumpVariable($_SESSION);        
-        echo '<hr /><strong>GET</strong><hr />';
-        self::dumpVariable($_GET);
-        echo '<hr /><strong>POST</strong><hr />';
-        self::dumpVariable($_POST);
-        echo '<hr /><strong>REQUEST</strong><hr />';
-        self::dumpVariable($_REQUEST);
-        echo '<hr /><strong>SERVER</strong><hr />';
-        self::dumpVariable($_SERVER);
-        echo '<hr /><strong>COOKIE</strong><hr />';
-        self::dumpVariable($_COOKIE);        
-        echo '<hr /><strong>CONNECTION</strong><hr />';
-        self::dumpVariable($this);
-        self::bytes(memory_get_peak_usage(true));
     }
 
     /**
@@ -1494,6 +1484,28 @@ class Anvil
         }
 
     }
+
+    /**
+     * echo out all the global variables.     
+     */
+    public function showGlobals()
+    {
+        echo '<hr /><strong>SESSION</strong><hr />';
+        self::dumpVariable($_SESSION);        
+        echo '<hr /><strong>GET</strong><hr />';
+        self::dumpVariable($_GET);
+        echo '<hr /><strong>POST</strong><hr />';
+        self::dumpVariable($_POST);
+        echo '<hr /><strong>REQUEST</strong><hr />';
+        self::dumpVariable($_REQUEST);
+        echo '<hr /><strong>SERVER</strong><hr />';
+        self::dumpVariable($_SERVER);
+        echo '<hr /><strong>COOKIE</strong><hr />';
+        self::dumpVariable($_COOKIE);        
+        echo '<hr /><strong>CONNECTION</strong><hr />';
+        self::dumpVariable($this);
+        self::bytes(memory_get_peak_usage(true));
+    }    
 
     /**
      * read file into string
