@@ -344,22 +344,27 @@ class Database
 
 
     /**
-     * 
+     * this commits the change to the database performs an insert 
+     * or update based on id number.
      * 
      */ 
-    public function persist($table, $object)
+    public function persist($object)
     {
+        if (preg_match('@\\\\([\w]+)$@', get_class($object), $matches)) {
+            $classname = $matches[1];
+        }  
+        $table = $classname . 's';      
+        
         if ($this->id > 0) {
             // this is an update
-            $this->dbh->update($table, $object);            
+            $this->update($table, $object);
         } else {
-            // this is an addition
-            $this->dbh->insert($table, $object);            
+            $this->insert($table, $object);
         }
     }    
 
     /**
-     * 
+     * run the provided sql query
      * 
      * @param  string $sql    [the query to run]
      * @param  array  $params [the parameters to bind to the query string.]
@@ -383,7 +388,7 @@ class Database
             $sth = $this->dbh->prepare($sql);
             if (!$sth) {
                 echo "\nPDO::errorInfo():\n";
-                print_r($this->dbh->errorInfo());
+                print_r($this->errorInfo());
             }
             $sth->execute($matches);
             
@@ -420,7 +425,7 @@ class Database
         for ($i=0; $i<count($pieces); $i++) {
             $pieces[$i] = trim($pieces[$i]);
             if(!empty($pieces[$i]) && $pieces[$i] != "#") {
-                $this->dbh->exec($pieces[$i]);
+                $this->exec($pieces[$i]);
             }
         }
     }
@@ -501,7 +506,7 @@ class Database
     public function showDatabases()
     {
         $array = array();
-        $sth = $this->dbh->prepare('SHOW databases');        
+        $sth = $this->prepare('SHOW databases');        
         $sth->execute();        
         $tableinfo = $sth->fetchAll(\PDO::FETCH_ASSOC);        
         foreach ($tableinfo as $key => $value) {            
@@ -519,7 +524,7 @@ class Database
     public function showTables()
     {
         $array = array();
-        $sth = $this->dbh->prepare('SHOW tables');        
+        $sth = $this->prepare('SHOW tables');        
         $sth->execute();        
         $tableinfo = $sth->fetchAll(\PDO::FETCH_ASSOC);        
         foreach ($tableinfo as $key => $value) {            
