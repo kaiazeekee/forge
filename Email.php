@@ -389,7 +389,8 @@ class Email
      */
     public function from( $cEmail = null , $cName = null )
     {
-        $this->isAddressValid ( $cEmail ) ? $this->_from = $cEmail : false;
+
+        $this->isAddressValid ($cEmail) ? $this->_from = $cEmail : false;
         !empty( $cName ) ? $this->_fromname = $cName : false;
         return $this;
     }
