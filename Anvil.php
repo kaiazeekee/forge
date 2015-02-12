@@ -22,6 +22,7 @@ class Anvil
 
     }
 
+
     /**
      * @ignore
      */
@@ -664,6 +665,18 @@ class Anvil
             return 0;
         }
     }
+
+
+    /**
+     * 
+     */ 
+    function getClassName($obj) {
+        $classname = get_class($obj);
+        if (preg_match('@\\\\([\w]+)$@', $classname, $matches)) {
+            $classname = $matches[1];
+        }
+        return $classname;
+    }    
 
     /**
      * extract the file extension from a path name.

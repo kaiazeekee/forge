@@ -1122,6 +1122,8 @@ class Email
 
         $cReturn = '';
 
+        is_array($aOutput) ? $output = (object) $aOutput : $output = $aOutput;
+
         if ( file_exists( $f ) ) {
 
             ob_start();

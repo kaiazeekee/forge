@@ -254,6 +254,17 @@ class Database
     }
 
     /**
+     * show the fully rendered sql query with variables inserted.  basically, show
+     * what PDO is actually processing.
+     * 
+     * @return string 
+     */ 
+    public function debugQuery()
+    {
+
+    }
+
+    /**
      * 
      * query the currently selected database for properties DESCRIBE
      * 
@@ -374,8 +385,8 @@ class Database
     public function runQuery($sql, $params = array())
     {
 
-        $queryType = substr(trim($sql), 0, strpos($sql, ' '));
-
+        $sql = preg_replace("/[\r\n|\n]/", ' ', $sql);
+        $sql = preg_replace("/\s+/", ' ', trim($sql));        
         // ensure that only 
         $matches = array();
         foreach ($params as $key => $value) {
@@ -390,17 +401,8 @@ class Database
                 echo "\nPDO::errorInfo():\n";
                 print_r($this->errorInfo());
             }
-            $sth->execute($matches);
-            
-            if (strtoupper($queryType) == 'SELECT') {
-                if ($sth->rowCount() == 1) {
-                    return $sth->fetch(\PDO::FETCH_OBJ);
-                } else {
-                    return $sth;
-                }                
-            } else {
-                return $sth;
-            }    
+            $sth->execute($matches);            
+            return $sth;
         } catch ( \PDOException $e) {
             return $e->getCode() . ':' . $e->getMessage();
         } catch ( \Exception $e ) {
