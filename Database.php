@@ -254,17 +254,6 @@ class Database
     }
 
     /**
-     * show the fully rendered sql query with variables inserted.  basically, show
-     * what PDO is actually processing.
-     * 
-     * @return string 
-     */ 
-    public function debugQuery()
-    {
-
-    }
-
-    /**
      * 
      * query the currently selected database for properties DESCRIBE
      * 
@@ -285,6 +274,14 @@ class Database
         }
         return $columns;
     }
+
+
+    public function getError()
+    {
+        $err = $this->dbh->errorInfo();
+        return $err[2];
+    }
+
 
     /**
      * 
@@ -308,6 +305,15 @@ class Database
     public function errorMessage()
     {
         return $this->errorMessage;
+    }
+
+    public function fetch($type = 'FETCH_OBJ')
+    {
+
+
+        $tableinfo = $sth->fetchAll(\PDO::FETCH_ASSOC);
+
+
     }
 
     /**

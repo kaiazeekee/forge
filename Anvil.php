@@ -172,17 +172,28 @@ class Anvil
         $_benchmarks = array();
     }
 
+    public function reduceNumber($start, $floor, $factor = 2)
+    {
+        if ($start > $floor) {
+            $start = ($start/$factor);
+            if ($start > $floor) {
+                $start = self::reduceNumber($start, $floor, $factor);
+            }
+        }
+        return round($start);
+    }
+
 
     /**
      * bind a variable array to an object
      */ 
-    public function bind($variables, $obj)
-    {
-        is_object($variables) ? $variables = (array) $variables : false;
-        foreach($variables as $k => $v) {
-            $obj->{$k} = $v;
-        }  
-    }
+    //public function bind($variables, $obj)
+    //{
+     //   is_object($variables) ? $variables = (array) $variables : false;
+      //  foreach($variables as $k => $v) {
+      //      $obj->{$k} = $v;
+      //  }  
+    //}
 
     /**
      * return filesize in human readable format]
@@ -296,49 +307,6 @@ class Anvil
     }
 
     /**
-     * format dates in predefined methods of display
-     * 
-     * @param  string $date [date string to be converted]
-     * @param  string $type what type of string to be returned.
-     * 
-     *     expanded
-     *     fancy
-     *     fancywithhours
-     *     europe: d/m/Y
-     *     standard(default): m/d/Y
-     * 
-     * 
-     * @return string
-     */
-    public function formatDate($date, $type = 'mdY')
-    {
-        
-        if ($type == 'expanded') {
-            return date('l F j, Y', strtotime($date));
-        } elseif ($type == 'fancy') {
-            return date('l F j', strtotime($date)) . '<sup>' . date('S', strtotime($date)) . '</sup> ' . date('Y', strtotime($date));
-        } elseif ($type == 'fancy_with_hours') {
-            return date('l F j', strtotime($date)) . '<sup>' . date('S', strtotime($date)) . '</sup>' . date('G:i Y', strtotime($date));
-        } elseif ($type == 'europe') {
-            return date('d/m/Y', strtotime($date));
-        } else {
-            return date('m/d/Y', strtotime($date));
-        }
-    }
-
-
-    /**
-     * create a random text string
-     * @see  pi()
-     * @return string
-     */
-    public function csrf()
-    {
-        return self::encryptString(substr(self::pi(9999), rand(0,9900), rand(8,80)));
-    }
-
-
-    /**
      * convert lbs to kilograms]
      * 
      * @param  integer $pounds [number of pounds]
@@ -348,6 +316,41 @@ class Anvil
     public static function convertLbtoKg($pounds)
     {
         return $pounds * 0.4535923;
+    }
+
+    /**
+     * The file upload for multiple file uploads changes the returned array to 
+     * an unusable associative array.
+     * 
+     */ 
+    public function correctFileUpload($files)
+    {
+
+        $array = array();
+
+        // use the tmp_name to correct.
+        foreach ($files['tmp_name'] as $n => $value) { 
+            $file = array();
+            $file['name'] = $files['name'][$n];
+            $file['type'] = $files['type'][$n];
+            $file['tmp_name'] = $files['tmp_name'][$n];
+            $file['error'] = $files['error'][$n];
+            $file['size'] = $files['size'][$n];
+
+            $array[] = (object) $file;
+        }
+
+        return $array;  
+    }
+
+    /**
+     * create a random text string
+     * @see  pi()
+     * @return string
+     */
+    public function csrf()
+    {
+        return self::encryptString(substr(self::pi(9999), rand(0,9900), rand(8,80)));
     }
 
 
@@ -612,6 +615,37 @@ class Anvil
         $aUrl = parse_url($cString);
         return preg_replace('/^(?:.+?\.)+(.+?\.(?:co\.uk|com|net|edu|gov|org))(\:[0-9]{2,5})?\/*.*$/is', '$1', $aUrl['host']);
     }
+
+    /**
+     * format date in predefined methods of display
+     * 
+     * @param  string $date [date string to be converted]
+     * @param  string $type what type of string to be returned.
+     * 
+     *     expanded
+     *     fancy
+     *     fancywithhours
+     *     europe: d/m/Y
+     *     standard(default): m/d/Y
+     * 
+     * 
+     * @return string
+     */
+    public function formatDate($date, $type = 'mdY')
+    {
+        
+        if ($type == 'expanded') {
+            return date('l F j, Y', strtotime($date));
+        } elseif ($type == 'fancy') {
+            return date('l F j', strtotime($date)) . '<sup>' . date('S', strtotime($date)) . '</sup> ' . date('Y', strtotime($date));
+        } elseif ($type == 'fancy_with_hours') {
+            return date('l F j', strtotime($date)) . '<sup>' . date('S', strtotime($date)) . '</sup>' . date('G:i Y', strtotime($date));
+        } elseif ($type == 'europe') {
+            return date('d/m/Y', strtotime($date));
+        } else {
+            return date('m/d/Y', strtotime($date));
+        }
+    }    
 
     /**
      * take raw string and format according to appropriate country code
