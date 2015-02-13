@@ -1457,7 +1457,7 @@ class Anvil
      * @param  integer $nQuality [image quality]
      * 
      */
-    public function resizeImage($cInput, $cOutput, $nH = 240, $nW = 320, $xType = 'normal', $nQuality = 100)
+    public function resizeImage($cInput, $cOutput, $nH = 1600, $nW = 2560, $xType = 'normal', $nQuality = 100)
     {
       
         if (function_exists('imagecreatefromgif')) {
