@@ -227,6 +227,28 @@ class Email
     }
 
     /**
+     * set the bcc field of the email message - only one email address allowed.
+     * 
+     * @return Email
+    */
+    public function bcc($text)
+    {
+        $this->_bcc = $text;
+        return $this;
+    }
+
+    /**
+     * set the bcc field of the email message - only one email address allowed.
+     * 
+     * @return Email
+    */
+    public function cc($text)
+    {
+        $this->_cc = $text;
+        return $this;
+    }
+
+    /**
      * set the check DNS variable.
      */ 
     public function checkDns ( $lCheck = false )
