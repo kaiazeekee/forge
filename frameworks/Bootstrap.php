@@ -2,7 +2,7 @@
 /**
  *                                                                   
  */
-namespace foonster\forge;
+namespace foonster\forge\frameworks;
 /**
  * A twitter bootstrap abstraction class
  * 
@@ -30,12 +30,12 @@ class Bootstrap
 
     public function alert($message, $type = 'success')
     {
-        if ($type != 'success' || $type != 'warning' || $type != 'danger') {
+        if ($type != 'success' && $type != 'warning' && $type != 'danger') {
             $type = 'success';
         }
         $string = '<div class="alert alert-' . $type . ' alert-dismissible fade in flash" id="' . $type . 'Alert" role="alert">';
         $string .= '<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
-        $string .= '<div id="' . $type . 'AlertMessage">' . $message . '</div>';
+        $string .= '<div id="' . $type . 'AlertMessage">' . $message . '</div></div>';
         return $string;
     }
 

@@ -80,6 +80,15 @@ class Html
         
     }
 
+    public function attribute($name = null, $value = null)
+    {
+        $this->setAttribute($name, $value);
+    }
+
+    public function tag($name = null, $value = null)
+    {
+        $this->setTag($name);
+    }
     /**
      * 
      * clear all the protected variables

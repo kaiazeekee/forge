@@ -2,7 +2,7 @@
 /**
  *                                                                   
  */
-namespace foonster\forge;
+namespace foonster\forge\frameworks;
 /**
  * A twitter bootstrap abstraction class
  * 
