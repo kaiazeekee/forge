@@ -10,5 +10,8 @@
             "name": "foonster/Foonster Contributors",
             "homepage": "https://github.com/foonster/Foonster/graphs/contributors"
         }
-    ]
+    ],
+    "autoload": {
+        "classmap": ["./"]
+    }
 }

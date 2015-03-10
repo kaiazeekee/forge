@@ -85,7 +85,7 @@ class Html
         $this->setAttribute($name, $value);
     }
 
-    public function tag($name = null, $value = null)
+    public function tag($name = null)
     {
         $this->setTag($name);
     }
