@@ -1,9 +1,6 @@
 <?php
 /**
  *                                                                   
- */
-namespace foonster\forge\frameworks;
-/**
  * A twitter bootstrap abstraction class
  * 
  * 

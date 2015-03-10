@@ -1,9 +1,6 @@
 <?php
 /**
  *                                                                   
- */
-namespace foonster\forge;
-/**
  * A database abstraction class
  * 
  * 

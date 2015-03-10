@@ -1,7 +1,4 @@
 <?php
-
-namespace foonster\forge;
-
 /**
  * The standard HTML rendering class
  * 

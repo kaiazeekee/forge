@@ -1,6 +1,4 @@
 <?php
-
-namespace foonster\forge;
 /**
  * A set of methods to provide basic calendar functions beyond
  * the normal datetime.

@@ -1,6 +1,4 @@
 <?php
-namespace foonster\forge;
-
 /**
  * A class that may be used to compose and send e-mail messages using 
  * the sendmail function within PHP/Server

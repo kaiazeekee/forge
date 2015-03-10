@@ -1,6 +1,4 @@
 <?php
-
-namespace foonster\forge\paymentgateways\Authorizenet;
 /**
  * This class is based on the AIM Developer Guide using Authorize.Net’s 
  * Advanced Integration Method API

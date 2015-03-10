@@ -2,9 +2,7 @@
 /**
 * @author Nicolas Colbert <support@foonster.com>
 * @copyright 2002 Foonster Technology
-*/
-namespace foonster\forge;
-/**
+* 
  * A set of methods developed through the various years that are commonly needed 
  * on numerous projects 
  */
