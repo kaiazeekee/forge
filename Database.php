@@ -185,6 +185,15 @@ class Database
     }
 
     /**
+     * return the connection
+     * 
+     */ 
+    public function connection()
+    {
+        return $this->dbh;
+    }
+
+    /**
      * return the value stored in the connectionError variable
      * 
      * @return boolean TRUE/FALSE - if the connect command had an issue.
@@ -273,13 +282,6 @@ class Database
     }
 
 
-    public function getError()
-    {
-        $err = $this->dbh->errorInfo();
-        return $err[2];
-    }
-
-
     /**
      * 
      * return message from errorInfo command
@@ -306,11 +308,14 @@ class Database
 
     public function fetch($type = 'FETCH_OBJ')
     {
-
-
         $tableinfo = $sth->fetchAll(\PDO::FETCH_ASSOC);
+    }
 
 
+    public function getError()
+    {
+        $err = $this->dbh->errorInfo();
+        return $err[2];
     }
 
     /**
@@ -355,7 +360,6 @@ class Database
     {
         return $this->dbh->lastInsertId();
     }
-
 
     /**
      * this commits the change to the database performs an insert 
@@ -411,7 +415,36 @@ class Database
         } catch ( \Exception $e ) {
             return $e->getCode() . ':' . $e->getMessage();
         }
-    }    
+    } 
+
+
+    /**
+     * [runSql]
+     * @param  string $sql    [the query to run]
+     * @param  array  $params [the parameters to bind to the query string.]
+     * @return mixed
+     */
+    public function runSql($sql, $params = array())
+    {
+        try {
+            $sth = $this->dbh->prepare($sql);
+            if (!$sth) {
+                echo "\nPDO::errorInfo():\n";
+                print_r($dbh->errorInfo());
+            }
+            $sth->execute($params);
+
+            if ($sth->rowCount() == 1) {
+                return $sth->fetch(\PDO::FETCH_OBJ);
+            } else {
+                return $sth;
+            }
+        } catch ( \PDOException $e) {
+            return $e->getCode() . ':' . $e->getMessage();
+        } catch ( \Exception $e ) {
+            return $e->getCode() . ':' . $e->getMessage();
+        }
+    }       
 
     /**
      * PDO command to run a SOURCE command File
