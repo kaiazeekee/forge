@@ -176,6 +176,40 @@ class Calendar extends \DateTime
     }
 
     /**
+     * 
+     * return a text string representing the season based on the provided
+     * month.
+     * 
+     * @param string/intger 
+     * 
+     * @return string
+     * 
+     */ 
+    public function season($string)
+    {
+
+        !is_numeric($string) = $string= date('n', strtotime($string . '18th, 1970')) : false;
+
+        $month = intval($string);
+
+        $seasons = array( 
+            1 => 'Winter',
+            2 => 'Winter',
+            3 => 'Spring',
+            4 => 'Spring',
+            5 => 'Spring',
+            6 => 'Summer',
+            7 => 'Summer',
+            8 => 'Summer',
+            9 => 'Fall',
+            10 => 'Fall',
+            11 => 'Fall',
+            12 => 'Winter');
+
+        return $seasons[$month];
+    }
+
+    /**
      * change the year assgined to the class, there is no return value but the method
      * will run the loadCalendar function.
      * 

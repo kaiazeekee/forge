@@ -211,40 +211,6 @@ class Anvil
     }
 
     /**
-     * build category tree from database table
-     * 
-     * @param  string $cTable [name of database table]
-     * @return array
-     */
-    public function categoryTree($cTable, $qualifier = '')
-    {
-        $aCategories = array();
-
-        !empty($qualifier) ? $qualifier = ' AND ' . $qualifier : false;
-
-        $sql = $this->sqlRunQuery( "
-            SELECT * FROM $cTable 
-            WHERE 1 $qualifier 
-            ORDER BY parnt_id , sortorder" );
-        
-        $records = $sql->fetchAll(\PDO::FETCH_OBJ);        
-        
-        foreach ($records as $n => $record) {
-            empty($record->sortorder) ? $record->sortorder = 1 : false;
-            $aCategories[$record->id] = (array) $record;
-            $aCategories[$record->id]['directory'] = array();
-        }
-
-        foreach ($aCategories AS $c => $v) {       
-            if ($v['parnt_id'] > 0) {               
-                $aCategories[$v['parnt_id']]['directory'][] = $v;
-            }
-        }
-
-        return $aCategories;
-    }
-
-    /**
      * build category directory based on Foonster Technology assumptions on parnt_id
      * 
      * @param  array $aCategories [array to build category list from]
