@@ -80,11 +80,13 @@ class Html
     public function attribute($name = null, $value = null)
     {
         $this->setAttribute($name, $value);
+        return $this;
     }
 
     public function tag($name = null)
     {
         $this->setTag($name);
+        return $this;
     }
     /**
      * 
@@ -451,6 +453,11 @@ class Html
         } else {
             $this->_value = htmlentities(trim($value));        
         }
+        return $this;
+    }
+
+    public function value($value) {
+        $this->setValue($value);
         return $this;
     }
     

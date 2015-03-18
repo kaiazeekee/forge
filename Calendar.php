@@ -13,6 +13,7 @@ class Calendar extends \DateTime
     private $vars = array();    
     private $year;
     private $time;
+    private $standard = 'US';
     public $error;
 
     /**
@@ -21,11 +22,9 @@ class Calendar extends \DateTime
      * @param integer $year [what year to load]
      */
     public function __construct($year = null)
-    {                
+    {       
         empty($year) ? $this->year = date('Y') : $this->year = $year;        
-        !is_numeric($this->year) ? $this->year = date('Y') : false;    
-        $this->time = strtotime('1/1/' . $this->year); 
-        self::loadCalendar();
+        !is_numeric($this->year) ? $this->year = date('Y') : false;        
     }
 
     /**
@@ -42,7 +41,7 @@ class Calendar extends \DateTime
      */
     public function __get($index)
     {
-        return $this->vars[ $index ];
+        return $this->vars[$index];
     }
 
     /**
@@ -51,6 +50,36 @@ class Calendar extends \DateTime
     public function __set($index, $value)
     {
         $this->vars[$index] = $value;
+    }
+
+
+    public function getWeekNumber($date)
+    {
+        if ($this->standard == 'US') {
+            $week = date('W', strtotime($date));
+            $dayOfWeek = date('w', strtotime($date));
+            ($dayOfWeek == 0) ? $week++ : false;            
+        } else {
+            $week = date('W', strtotime($date));
+        }
+
+        return intval($week);
+    }
+
+    /**
+     * uses the default for PHP, but this will change over to other applicable 
+     * standards.
+     * 
+     * ISO 8601 is the only standard that changes items at this time.
+     * 
+     * 
+     */ 
+    public function standard($standard) { 
+        if ($standard == 'EU') { 
+            $this->standard = 'EU';
+        } else {
+            $this->standard = 'US';
+        }
     }
 
     /**
@@ -100,18 +129,20 @@ class Calendar extends \DateTime
         $n = 0;
         $count = 0;
         foreach ($days as $day) {
-            $count++;
-            if ($count <= 7) {
-                $weeks[$n][] = $day;    
-            } else {
-                $n++;                
-                $count = 1;
-                $weeks[$n][] = $day;    
-            }
+            $weeks[self::getWeekNumber($day)][] = $day;    
         }
 
         return $weeks;
     }
+
+    public function getWeek($week)
+    {
+        //$star
+        //echo $week;
+        //exit;
+
+    }
+
 
     /**
      * fill array with what would appear on a calendar page.
@@ -120,7 +151,7 @@ class Calendar extends \DateTime
      * @param  integer $year  [year]
      * @return array
      */
-    public function fillDays($month, $year) 
+    public function fillPage($month, $year) 
     {
         
         $days = array();
@@ -141,7 +172,7 @@ class Calendar extends \DateTime
     public function loadCalendar()
     {
         for ($i = 1; $i <= 12; $i++) {   
-            $month = self::getMonth($i, $this->year);
+            $month = self::month($i, $this->year);            
             $this->{strtolower($month->long_name)} = $month;        
         }
     }
@@ -154,7 +185,7 @@ class Calendar extends \DateTime
      * @param  boolean $parent [true, will build information about next/previous months as well]
      * @return object
      */
-    public function getMonth($month = null, $year = null, $parent = true) 
+    public function month($month = null, $year = null, $parent = true) 
     {
         is_numeric($month) ? $time = strtotime($month . '/1/' . $year) : $time = strtotime($month . ' 1st, ' . $year);
         $month = array();
@@ -164,13 +195,13 @@ class Calendar extends \DateTime
         $month['short_number'] = date('n', $time);
         $month['number_of_days'] = date('t', $time);
         $month['year'] = date('Y', $time);
-        $month['days'] = self::fillDays($month['short_number'], $year);
-        $month['byweek'] = self::fillByWeek($month['short_number'], $year);
+        $month['days'] = self::fillPage($month['short_number'], $year);
+        $month['weeks'] = self::fillByWeek($month['short_number'], $year);
         if ($parent) {            
             $previous = strtotime("-1 month", $time);
             $next = strtotime("+1 month", $time);
-            $month['previous'] = self::getMonth(date('m', $previous), date('Y', $previous), false);
-            $month['next'] = self::getMonth(date('m', $next), date('Y', $next), false);
+            $month['previous'] = self::month(date('m', $previous), date('Y', $previous), false);
+            $month['next'] = self::month(date('m', $next), date('Y', $next), false);
         }
         return (object) $month;
     }
@@ -187,7 +218,7 @@ class Calendar extends \DateTime
      */ 
     public function season($string)
     {
-
+        
         !is_numeric($string) = $string= date('n', strtotime($string . '18th, 1970')) : false;
 
         $month = intval($string);
@@ -207,6 +238,16 @@ class Calendar extends \DateTime
             12 => 'Winter');
 
         return $seasons[$month];
+        
+    }
+
+    /**
+     * 
+     */ 
+    public function timezone($timezone = 'UTC')
+    {
+        // set the default timezone to use. Available since PHP 5.1
+        date_default_timezone_set($timezone);
     }
 
     /**
@@ -217,12 +258,17 @@ class Calendar extends \DateTime
      * 
      * @param integer $year [year]     
      */
-    public function setYear($year)
+    public function year($year)
     {
         empty($year) ? $this->year(date('Y')) : $this->year = $year;
         !is_numeric($this->year) ? $this->year = date('Y') : $this->year = $year;    
         self::loadCalendar();
 
+    }
+
+    private function holidaysSchedule()
+    {
+        
     }
 
 }
