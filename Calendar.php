@@ -7,19 +7,43 @@
  * @copyright 2002 Foonster Technology
  * 
  */
+/**
+ * A set of methods to provide basic calendar functions beyond
+ * the normal datetime.
+ * 
+ * @param array $vars [used ]
+ * 
+ * 
+ * 
+ * 
+ */ 
 class Calendar extends \DateTime
 {
 
+    /**
+     * @ignore
+     */
     private $vars = array();    
+    /**
+     * @ignore
+     */
     private $year;
+    /**
+     * @ignore
+     */
     private $time;
+    /**
+     * @ignore
+     */
     private $standard = 'US';
+    /**
+     * @ignore
+     */
     public $error;
 
     /**
-     * class constructor
+     * class constructor and will load the default year
      * 
-     * @param integer $year [what year to load]
      */
     public function __construct($year = null)
     {       
@@ -53,6 +77,14 @@ class Calendar extends \DateTime
     }
 
 
+    /**
+     * return the week number the day appears on.
+     * 
+     * @param string $date [string in any format representing the date to be checkeed] 
+     * 
+     * @return integer 
+     * 
+     */ 
     public function getWeekNumber($date)
     {
         if ($this->standard == 'US') {
@@ -68,10 +100,9 @@ class Calendar extends \DateTime
 
     /**
      * uses the default for PHP, but this will change over to other applicable 
-     * standards.
+     * standards. ISO 8601 is the only standard that changes items at this time.
      * 
-     * ISO 8601 is the only standard that changes items at this time.
-     * 
+     * @param string $standard [the standard to use for date functions. - default is US - the only other option is EU or ISO 8601]
      * 
      */ 
     public function standard($standard) { 
@@ -86,9 +117,11 @@ class Calendar extends \DateTime
      * build an asosociative array containing the days and weeks. 
      * additionally, this does NOT use ISO 8601 to make the weeks.
      * 
-     * @param  integer $month [number representing the month]
-     * @param  integer $year  [number representing the year]
+     * @param integer $month [number representing the month]
+     * @param integer $year  [number representing the year]
+     * 
      * @return array
+     * 
      */
     public function fillByWeek($month, $year) 
     {
@@ -135,20 +168,11 @@ class Calendar extends \DateTime
         return $weeks;
     }
 
-    public function getWeek($week)
-    {
-        //$star
-        //echo $week;
-        //exit;
-
-    }
-
-
     /**
      * fill array with what would appear on a calendar page.
      * 
-     * @param  integer $month [month]
-     * @param  integer $year  [year]
+     * @param  integer $month [integer representing the requested month]
+     * @param  integer $year  [integer representing the requested year]
      * @return array
      */
     public function fillPage($month, $year) 
@@ -180,11 +204,24 @@ class Calendar extends \DateTime
     /**
      * generate general information about requested month.
      * 
-     * @param  integer $month [month]
+     * @param  integer $month [integer representing the ]
      * @param  integer $year  [year]
      * @param  boolean $parent [true, will build information about next/previous months as well]
-     * @return object
-     */
+     * @return object an object containing all informaiton about this month.
+     * 
+     * Example
+     * 
+     * - long_name => December
+     * - long_number => 12
+     * - short_name => December
+     * - short_number => 12
+     * - number_of_days => 31
+     * - year => 1941
+     * - days => Array (list of julian calendar formatted days.)        
+     * - weeks => Array (integer weeknumber => Array (list of julian calendar formatted days.)        
+     * - previous => self:month stdClass - same as month - but does not carry forward with "next/previous"
+     * - next => => self:month  - same as month - but does not carry forward with "next/previous"
+     * */
     public function month($month = null, $year = null, $parent = true) 
     {
         is_numeric($month) ? $time = strtotime($month . '/1/' . $year) : $time = strtotime($month . ' 1st, ' . $year);
@@ -208,10 +245,9 @@ class Calendar extends \DateTime
 
     /**
      * 
-     * return a text string representing the season based on the provided
-     * month.
+     * return a text string representing the season based on the provided month.
      * 
-     * @param string/intger 
+     * @param string $string [the date to evaluate]
      * 
      * @return string
      * 
@@ -219,7 +255,7 @@ class Calendar extends \DateTime
     public function season($string)
     {
         
-        !is_numeric($string) = $string= date('n', strtotime($string . '18th, 1970')) : false;
+        $string = date('n', strtotime($string));
 
         $month = intval($string);
 
@@ -242,21 +278,23 @@ class Calendar extends \DateTime
     }
 
     /**
+     * sets the default timezone used by all date/time functions.
      * 
+     * @param string $timezone [The timezone identifier, like UTC or Europe/Lisbon or America/Anchorage.]
+     * 
+     * @return boolean 
      */ 
     public function timezone($timezone = 'UTC')
     {
-        // set the default timezone to use. Available since PHP 5.1
-        date_default_timezone_set($timezone);
+        
+        return date_default_timezone_set($timezone);
     }
 
     /**
      * change the year assgined to the class, there is no return value but the method
      * will run the loadCalendar function.
-     * 
-     * @see loadCalendar()
-     * 
-     * @param integer $year [year]     
+     *          
+     * @param integer $year 
      */
     public function year($year)
     {
@@ -266,8 +304,18 @@ class Calendar extends \DateTime
 
     }
 
+    /**
+     * @ignore
+     * 
+     */
     private function holidaysSchedule()
     {
+
+            $global = array();
+            $christian = array();
+            $usa = array();
+            $islam = array();
+            $hebrew = array();
         
     }
 
