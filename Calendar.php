@@ -10,12 +10,6 @@
 /**
  * A set of methods to provide basic calendar functions beyond
  * the normal datetime.
- * 
- * @param array $vars [used ]
- * 
- * 
- * 
- * 
  */ 
 class Calendar extends \DateTime
 {
@@ -43,7 +37,7 @@ class Calendar extends \DateTime
 
     /**
      * class constructor and will load the default year
-     * 
+     * @param integer $year numeric representing the year to load, if null then the current year as determined by the server running the code returns.
      */
     public function __construct($year = null)
     {       

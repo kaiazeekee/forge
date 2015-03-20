@@ -2,6 +2,10 @@
 
 This is a collection of stand-alone classes that Foonster Technology  utilizes in various projects where needed.  
 
+for full documentation of the class
+
+http://www.foonster.com/support/docs/namespaces/default.html
+
 ## Classes
 
 ### EMAIL

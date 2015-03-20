@@ -11,7 +11,9 @@
 class Bootstrap
 {
     
-
+    /**
+     * @ignore 
+     */ 
     public function __construct()
     {
     
@@ -25,6 +27,15 @@ class Bootstrap
         
     }   
 
+
+    /**
+     * 
+     * return a well-formed HTML mark-up to insert an alert
+     * @param string $message the string to be placed in the body.
+     * @param string $type the type of alert that you want to display [success = default, info, warning, danger]
+     * 
+     * @return string
+     */ 
     public function alert($message, $type = 'success')
     {
         if ($type != 'success' && $type != 'warning' && $type != 'danger') {
