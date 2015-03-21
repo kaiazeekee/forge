@@ -50,8 +50,6 @@ class Google
         !empty($country) ? $input[] = urlencode($country) : false;
         $map = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address=' . implode(',+', $input) . '&sensor=true');
 
-        echo 'http://maps.googleapis.com/maps/api/geocode/json?address=' . implode(',+', $input) . '&sensor=true';
-
         $array = json_decode($map, true);
         if ($array['status'] != 'ZERO_RESULTS') {
             $return['lat'] = $array['results'][0]['geometry']['location']['lat'];

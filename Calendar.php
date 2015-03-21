@@ -33,6 +33,10 @@ class Calendar extends \DateTime
     /**
      * @ignore
      */
+    private $_hoidays = array();
+    /**
+     * @ignore
+     */
     public $error;
 
     /**
@@ -68,43 +72,6 @@ class Calendar extends \DateTime
     public function __set($index, $value)
     {
         $this->vars[$index] = $value;
-    }
-
-
-    /**
-     * return the week number the day appears on.
-     * 
-     * @param string $date [string in any format representing the date to be checkeed] 
-     * 
-     * @return integer 
-     * 
-     */ 
-    public function getWeekNumber($date)
-    {
-        if ($this->standard == 'US') {
-            $week = date('W', strtotime($date));
-            $dayOfWeek = date('w', strtotime($date));
-            ($dayOfWeek == 0) ? $week++ : false;            
-        } else {
-            $week = date('W', strtotime($date));
-        }
-
-        return intval($week);
-    }
-
-    /**
-     * uses the default for PHP, but this will change over to other applicable 
-     * standards. ISO 8601 is the only standard that changes items at this time.
-     * 
-     * @param string $standard [the standard to use for date functions. - default is US - the only other option is EU or ISO 8601]
-     * 
-     */ 
-    public function standard($standard) { 
-        if ($standard == 'EU') { 
-            $this->standard = 'EU';
-        } else {
-            $this->standard = 'US';
-        }
     }
 
     /**
@@ -178,11 +145,34 @@ class Calendar extends \DateTime
         $date->month = strtotime( $month . '/1/' . $year);
         
         for ($i = 1; $i <= date('t', $date->month); $i++) {         
-            $days[] = date('m', $date->month) . '/' . $i . '/' . date('Y', $date->month);
+            $d = date('m', $date->month) . '/' . $i . '/' . date('Y', $date->month);
+            $days[] = $d;
         }
         
         return $days;
     }
+
+    /**
+     * return the week number the day appears on.
+     * 
+     * @param string $date [string in any format representing the date to be checkeed] 
+     * 
+     * @return integer 
+     * 
+     */ 
+    public function getWeekNumber($date)
+    {
+        if ($this->standard == 'US') {
+            $week = date('W', strtotime($date));
+            $dayOfWeek = date('w', strtotime($date));
+            ($dayOfWeek == 0) ? $week++ : false;            
+        } else {
+            $week = date('W', strtotime($date));
+        }
+
+        return intval($week);
+    }
+
 
     /**
      * @ignore
@@ -210,7 +200,7 @@ class Calendar extends \DateTime
      * - short_name => December
      * - short_number => 12
      * - number_of_days => 31
-     * - year => 1941
+     * - year => 1971
      * - days => Array (list of julian calendar formatted days.)        
      * - weeks => Array (integer weeknumber => Array (list of julian calendar formatted days.)        
      * - previous => self:month stdClass - same as month - but does not carry forward with "next/previous"
@@ -272,6 +262,21 @@ class Calendar extends \DateTime
     }
 
     /**
+     * uses the default for PHP, but this will change over to other applicable 
+     * standards. ISO 8601 is the only standard that changes items at this time.
+     * 
+     * @param string $standard [the standard to use for date functions. - default is US - the only other option is EU or ISO 8601]
+     * 
+     */ 
+    public function standard($standard) { 
+        if ($standard == 'EU') { 
+            $this->standard = 'EU';
+        } else {
+            $this->standard = 'US';
+        }
+    }
+
+    /**
      * sets the default timezone used by all date/time functions.
      * 
      * @param string $timezone [The timezone identifier, like UTC or Europe/Lisbon or America/Anchorage.]
@@ -298,17 +303,33 @@ class Calendar extends \DateTime
 
     }
 
+    public function addHoliday($date, $name, $reason = '', $moreinfo = '', $type = '')
+    {
+
+    }
+
     /**
      * @ignore
      * 
      */
-    private function holidaysSchedule()
+    private function holidays()
     {
 
-            $global = array();
-            $christian = array();
-            $usa = array();
+            $global = array(
+                '1/1' => array('name' => 'New Years Day', 'reason' => '', 'moreinfo' => '', 'type' => 'National Holiday'),
+                '12/31' => array('name' => 'Last Day of the Year', 'reason' => '', 'moreinfo' => '', 'type' => 'National Holiday'),
+                );
+            $christian = array(
+                );
+
+            $usa = array(
+                '7/14' => array('name' => 'Independence Day', 'reason' => '', 'moreinfo' => '', 'type' => 'National Holiday'),
+                'last thursday of november' => array('name' => 'Thanksgiving Day', 'reason' => '', 'moreinfo' => '', 'type' => 'National Holiday'),
+                '12/7' => array('name' => 'Pearl Harbor Day', 'reason' => '', 'moreinfo' => '', 'type' => 'National Holiday'),
+                );
+
             $islam = array();
+            
             $hebrew = array();
         
     }
