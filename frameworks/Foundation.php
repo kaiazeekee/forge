@@ -1,7 +1,7 @@
 <?php
 /**
  *                                                                   
- * A twitter bootstrap abstraction class
+ * A foundation abstraction class
  * 
  * 
  * @author  Nicolas Colbert
